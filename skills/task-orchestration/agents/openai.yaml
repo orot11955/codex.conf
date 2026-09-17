@@ -1,0 +1,8 @@
+interface:
+  display_name: "작업 조율"
+  short_description: "task-orchestration · 작업 조건에 맞는 범위만 적용"
+  default_prompt: "$task-orchestration을 사용해 이 요청을 소유권과 검증 기준이 있는 작업으로 분해해 주세요."
+
+# 기존 Astra 이후의 얇은 지침을 유지한다. 전체 절차는 명시 요청 때만 사용한다.
+policy:
+  allow_implicit_invocation: false

@@ -1,0 +1,17 @@
+{
+  "archives": {
+    "codex.conf.zip": "20c439d2567f66408645e5590c0601f3f8f64185810a46127c1a22c360b337e3",
+    "codex.file.zip": "3eed78f9fe535da0202e78a441dc2faf96c6e1de2d5e46a298e3a9c59c17f000"
+  },
+  "legacy_skills": {
+    "task-orchestration": "151312170035d5c6688bef65b880c31f06f20dd5061a806959b289c4ba3e65d9",
+    "codebase-exploration": "ca908c06334e25fe961f8e78d7ae5112516fffcba7febf7c67a3f5331647061f",
+    "change-design": "17605eab3fe682172461f6df6c901b5734e4275b1d342d548adba4a8021c6286",
+    "implementation-loop": "074750a8584ee7f8107177960f98ede2e7c82cfbe20b19b067a01a38d0f0ce4a",
+    "change-verification": "7dd3c2c2868beb40e86e2d11dcf1b32d6e4c4aee8f3a6ac8a34a9d99287fe837",
+    "change-review": "7f63eba52ad6b2768baf0bfedd63b611528c2f6bbcf19e3ea72e23c73965b4ff",
+    "security-review": "82afa30a52539798f9f9322c8e109b101ef95b9c05451542efd580910a109708"
+  },
+  "legacy_tester_sha256": "3132386f2511053693920e9666d0919724f39e6b34a741d8f40c5cbdfc326bde",
+  "source_state_files_excluded": 40
+}

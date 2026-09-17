@@ -1,0 +1,42 @@
+test_apply_idempotent (test_rooty.InstallerTests.test_apply_idempotent) ... ok
+test_apply_preserves_native_data_and_original_commands (test_rooty.InstallerTests.test_apply_preserves_native_data_and_original_commands) ... ok
+test_conflicting_skill_preserved_until_explicit_backup (test_rooty.InstallerTests.test_conflicting_skill_preserved_until_explicit_backup) ... ok
+test_existing_different_launcher_not_overwritten (test_rooty.InstallerTests.test_existing_different_launcher_not_overwritten) ... ok
+test_incorrect_profile_path_and_nonlocal_backend_fail_closed (test_rooty.InstallerTests.test_incorrect_profile_path_and_nonlocal_backend_fail_closed) ... ok
+test_plan_has_no_side_effects (test_rooty.InstallerTests.test_plan_has_no_side_effects) ... ok
+test_settings_remote_credentials_rejected_before_git (test_rooty.InstallerTests.test_settings_remote_credentials_rejected_before_git) ... ok
+test_candidate_has_rooty_provenance_and_project_guard (test_rooty.RootyTests.test_candidate_has_rooty_provenance_and_project_guard) ... ok
+test_codex_candidate_accepted_on_main_can_be_reviewed_without_local_copy (test_rooty.RootyTests.test_codex_candidate_accepted_on_main_can_be_reviewed_without_local_copy) ... ok
+test_concurrent_task_records_are_distinct (test_rooty.RootyTests.test_concurrent_task_records_are_distinct) ... ok
+test_cross_project_read_rejected (test_rooty.RootyTests.test_cross_project_read_rejected) ... ok
+test_empty_pending_is_local_program_and_records_no_llm (test_rooty.RootyTests.test_empty_pending_is_local_program_and_records_no_llm) ... ok
+test_metrics_contain_no_queries_or_document_body (test_rooty.RootyTests.test_metrics_contain_no_queries_or_document_body) ... ok
+test_missing_task_never_falls_back_to_current (test_rooty.RootyTests.test_missing_task_never_falls_back_to_current) ... ok
+test_old_codex_environment_does_not_override_rooty_task (test_rooty.RootyTests.test_old_codex_environment_does_not_override_rooty_task) ... ok
+test_pending_pagination_explicit (test_rooty.RootyTests.test_pending_pagination_explicit) ... ok
+test_review_packet_reuse_hash_and_privacy (test_rooty.RootyTests.test_review_packet_reuse_hash_and_privacy) ... ok
+test_review_rejects_cross_project_and_oversized_batch (test_rooty.RootyTests.test_review_rejects_cross_project_and_oversized_batch) ... ok
+test_reviewer_init_preview_and_same_home_refusal (test_rooty.RootyTests.test_reviewer_init_preview_and_same_home_refusal) ... ok
+test_rooty_bridge_exposes_no_sync_submit_or_arbitrary_exec (test_rooty.RootyTests.test_rooty_bridge_exposes_no_sync_submit_or_arbitrary_exec) ... ok
+test_rooty_task_A_stays_old_and_B_reads_new_without_process_restart (test_rooty.RootyTests.test_rooty_task_A_stays_old_and_B_reads_new_without_process_restart) ... ok
+test_snapshot_publication_excludes_tools_skills_and_native_state (test_rooty.RootyTests.test_snapshot_publication_excludes_tools_skills_and_native_state) ... ok
+test_tampered_summary_cannot_be_returned_by_search (test_rooty.RootyTests.test_tampered_summary_cannot_be_returned_by_search) ... ok
+test_candidate_on_main_not_in_verified_search (test_wiki.WikiTests.test_candidate_on_main_not_in_verified_search) ... ok
+test_codex_wrapper_injects_pinned_env_without_sandbox_override (test_wiki.WikiTests.test_codex_wrapper_injects_pinned_env_without_sandbox_override) ... ok
+test_concurrent_candidates_unique_complete (test_wiki.WikiTests.test_concurrent_candidates_unique_complete) ... ok
+test_duplicate_id_blocks_publish (test_wiki.WikiTests.test_duplicate_id_blocks_publish) ... ok
+test_empty_wiki_does_not_invent_knowledge (test_wiki.WikiTests.test_empty_wiki_does_not_invent_knowledge) ... ok
+test_missing_receipt_recovers_remote_branch (test_wiki.WikiTests.test_missing_receipt_recovers_remote_branch) ... ok
+test_read_returns_safety_and_checks_hash (test_wiki.WikiTests.test_read_returns_safety_and_checks_hash) ... ok
+test_resume_requires_original_sha (test_wiki.WikiTests.test_resume_requires_original_sha) ... ok
+test_submit_idempotent_and_main_unchanged (test_wiki.WikiTests.test_submit_idempotent_and_main_unchanged) ... ok
+test_submitted_candidate_mutation_is_rejected (test_wiki.WikiTests.test_submitted_candidate_mutation_is_rejected) ... ok
+test_sync_failure_keeps_current_and_outbox (test_wiki.WikiTests.test_sync_failure_keeps_current_and_outbox) ... ok
+test_sync_preserves_pinned_revision (test_wiki.WikiTests.test_sync_preserves_pinned_revision) ... ok
+test_unsafe_tar_link_and_traversal_rejected (test_wiki.WikiTests.test_unsafe_tar_link_and_traversal_rejected) ... ok
+test_yaml_alias_duplicate_and_unsafe_tags_rejected (test_wiki.WikiTests.test_yaml_alias_duplicate_and_unsafe_tags_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 37 tests in 113.192s
+
+OK

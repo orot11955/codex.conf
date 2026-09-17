@@ -1,0 +1,17 @@
+# NEW, dedicated reviewer home only. Never merge this into existing Rooty config.
+# Configure the preferred provider/model/auth separately using HERMES_HOME=... hermes setup.
+terminal:
+  backend: local
+  cwd: "."
+  home_mode: profile
+memory:
+  memory_enabled: false
+  user_profile_enabled: false
+  write_approval: true
+auxiliary:
+  background_review:
+    enabled: false
+skills:
+  creation_nudge_interval: 0
+  write_approval: true
+# This is NOT an OS sandbox. A local process still has OS-user filesystem access.

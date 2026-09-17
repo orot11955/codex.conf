@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+set -eu
+BASE=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd -P)
+exec "${PYTHON_BIN:-python3}" "$BASE/scripts/agentctl.py" "$@"

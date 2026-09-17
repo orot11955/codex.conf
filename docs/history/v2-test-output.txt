@@ -1,0 +1,157 @@
+Package: 2026.09.17-unified.2
+Runtime: Python 3.13.5 / Linux
+Tested agentctl.py SHA256: fc5051120102be081c87d2448471bf8d72181ad46dd14825e34717d4a63b2f45
+Runs are grouped; no authenticated model/browser calls.
+
+$ python3 -m unittest discover -s tests -v -k test_0
+test_01_original_model_policy_and_role_names_preserved (test_agentctl.AgentctlTests.test_01_original_model_policy_and_role_names_preserved) ... ok
+test_02_unknown_shared_key_rejected (test_agentctl.AgentctlTests.test_02_unknown_shared_key_rejected) ... ok
+test_03_malformed_toml_rejected_before_install (test_agentctl.AgentctlTests.test_03_malformed_toml_rejected_before_install) ... ok
+test_04_skill_hash_requires_review_and_relock (test_agentctl.AgentctlTests.test_04_skill_hash_requires_review_and_relock) ... ok
+test_05_malformed_yaml_rejected (test_agentctl.AgentctlTests.test_05_malformed_yaml_rejected) ... ok
+test_06_default_install_is_read_only_preview (test_agentctl.AgentctlTests.test_06_default_install_is_read_only_preview) ... ok
+test_07_install_uninstall_preserve_private_and_unmanaged (test_agentctl.AgentctlTests.test_07_install_uninstall_preserve_private_and_unmanaged) ... ok
+test_08_repeated_install_is_idempotent (test_agentctl.AgentctlTests.test_08_repeated_install_is_idempotent) ... ok
+test_09_legacy_whole_agent_link_detached_and_restored (test_agentctl.AgentctlTests.test_09_legacy_whole_agent_link_detached_and_restored) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 8.716s
+
+OK
+
+$ python3 -m unittest discover -s tests -v -k test_1
+test_10_legacy_skills_migrate_once_without_resurrection (test_agentctl.AgentctlTests.test_10_legacy_skills_migrate_once_without_resurrection) ... ok
+test_11_legacy_tester_known_only (test_agentctl.AgentctlTests.test_11_legacy_tester_known_only) ... ok
+test_12_unknown_legacy_tester_fails_closed (test_agentctl.AgentctlTests.test_12_unknown_legacy_tester_fails_closed) ... ok
+test_13_unknown_legacy_skill_fails_closed (test_agentctl.AgentctlTests.test_13_unknown_legacy_skill_fails_closed) ... ok
+test_14_existing_canonical_skill_is_backed_up (test_agentctl.AgentctlTests.test_14_existing_canonical_skill_is_backed_up) ... ok
+test_15_duplicate_name_in_different_skill_folder_rejected (test_agentctl.AgentctlTests.test_15_duplicate_name_in_different_skill_folder_rejected) ... ok
+test_16_duplicate_custom_agent_name_rejected (test_agentctl.AgentctlTests.test_16_duplicate_custom_agent_name_rejected) ... ok
+test_17_global_override_is_not_deleted (test_agentctl.AgentctlTests.test_17_global_override_is_not_deleted) ... ok
+test_18_source_edit_does_not_change_active_install (test_agentctl.AgentctlTests.test_18_source_edit_does_not_change_active_install) ... ok
+test_19_direct_managed_edit_is_never_overwritten (test_agentctl.AgentctlTests.test_19_direct_managed_edit_is_never_overwritten) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 12.991s
+
+OK
+
+$ python3 -m unittest discover -s tests -v -k test_2
+test_20_app_written_trust_and_ui_are_captured (test_agentctl.AgentctlTests.test_20_app_written_trust_and_ui_are_captured) ... ok
+test_21_explicit_machine_edits_are_applied (test_agentctl.AgentctlTests.test_21_explicit_machine_edits_are_applied) ... ok
+test_22_machine_cannot_change_model_policy (test_agentctl.AgentctlTests.test_22_machine_cannot_change_model_policy) ... ok
+test_23_shared_runtime_model_change_is_not_silently_adopted (test_agentctl.AgentctlTests.test_23_shared_runtime_model_change_is_not_silently_adopted) ... ok
+test_24_removed_skill_restores_baseline_and_releases_ownership (test_agentctl.AgentctlTests.test_24_removed_skill_restores_baseline_and_releases_ownership) ... ok
+test_25_backup_tampering_stops_uninstall (test_agentctl.AgentctlTests.test_25_backup_tampering_stops_uninstall) ... ok
+test_26_source_link_rejected (test_agentctl.AgentctlTests.test_26_source_link_rejected) ... ok
+test_27_legacy_whole_skills_link_fails_before_writes (test_agentctl.AgentctlTests.test_27_legacy_whole_skills_link_fails_before_writes) ... ok
+test_28_state_target_escape_rejected (test_agentctl.AgentctlTests.test_28_state_target_escape_rejected) ... ok
+test_29_home_itself_and_repo_roots_rejected (test_agentctl.AgentctlTests.test_29_home_itself_and_repo_roots_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 13.919s
+
+OK
+
+$ python3 -m unittest discover -s tests -v -k test_3
+test_30_repo_relocation_does_not_break_install (test_agentctl.AgentctlTests.test_30_repo_relocation_does_not_break_install) ... ok
+test_31_state_import_copies_only_markdown_without_overwrite (test_agentctl.AgentctlTests.test_31_state_import_copies_only_markdown_without_overwrite) ... ok
+test_32_state_import_symlink_parent_rejected (test_agentctl.AgentctlTests.test_32_state_import_symlink_parent_rejected) ... ok
+test_33_os_layers_do_not_force_auth_or_change_models (test_agentctl.AgentctlTests.test_33_os_layers_do_not_force_auth_or_change_models) ... ok
+test_34_existing_credentials_store_and_trust_preserved_locally (test_agentctl.AgentctlTests.test_34_existing_credentials_store_and_trust_preserved_locally) ... ok
+test_35_failed_cli_preflight_leaves_original_files (test_agentctl.AgentctlTests.test_35_failed_cli_preflight_leaves_original_files) ... ok
+test_36_successful_cli_preflight_uses_config_only_command (test_agentctl.AgentctlTests.test_36_successful_cli_preflight_uses_config_only_command) ... ok
+test_37_fault_injection_restores_prior_files (test_agentctl.AgentctlTests.test_37_fault_injection_restores_prior_files) ... ok
+test_38_incomplete_journal_recovers (test_agentctl.AgentctlTests.test_38_incomplete_journal_recovers) ... ok
+test_39_uninstall_does_not_depend_on_new_broken_source (test_agentctl.AgentctlTests.test_39_uninstall_does_not_depend_on_new_broken_source) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 12.095s
+
+OK
+
+$ python3 -m unittest discover -s tests -v -k test_4
+test_40_profiles_are_explicit_separate_files (test_agentctl.AgentctlTests.test_40_profiles_are_explicit_separate_files) ... ok
+test_41_recursive_agents_disabled_in_rendered_config (test_agentctl.AgentctlTests.test_41_recursive_agents_disabled_in_rendered_config) ... ok
+test_42_toml_round_trip_nested_arrays_inline_tables_and_keys (test_agentctl.AgentctlTests.test_42_toml_round_trip_nested_arrays_inline_tables_and_keys) ... ok
+test_43_manager_symlink_rejected (test_agentctl.AgentctlTests.test_43_manager_symlink_rejected) ... ok
+test_44_root_state_and_system_copies_not_in_runtime_sources (test_agentctl.AgentctlTests.test_44_root_state_and_system_copies_not_in_runtime_sources) ... ok
+test_45_removed_old_repo_restores_saved_content_not_broken_links (test_agentctl.AgentctlTests.test_45_removed_old_repo_restores_saved_content_not_broken_links) ... ok
+test_46_changed_relative_link_target_not_overwritten_on_rollback (test_agentctl.AgentctlTests.test_46_changed_relative_link_target_not_overwritten_on_rollback) ... ok
+test_47_tampered_resolved_backup_blocks_all_restore_writes (test_agentctl.AgentctlTests.test_47_tampered_resolved_backup_blocks_all_restore_writes) ... ok
+test_48_tampered_retired_skill_baseline_blocks_sync (test_agentctl.AgentctlTests.test_48_tampered_retired_skill_baseline_blocks_sync) ... ok
+test_49_doctor_flags_source_install_version_difference (test_agentctl.AgentctlTests.test_49_doctor_flags_source_install_version_difference) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 10.136s
+
+OK
+
+$ python3 -m unittest discover -s tests -v -k test_5
+test_50_seventeen_skills_ten_attributed_adaptations (test_agentctl.AgentctlTests.test_50_seventeen_skills_ten_attributed_adaptations) ... ok
+test_51_unknown_route_skill_rejected (test_agentctl.AgentctlTests.test_51_unknown_route_skill_rejected) ... ok
+test_52_readonly_role_cannot_be_assigned_browser_skill (test_agentctl.AgentctlTests.test_52_readonly_role_cannot_be_assigned_browser_skill) ... ok
+test_53_duplicate_route_or_blank_trigger_rejected (test_agentctl.AgentctlTests.test_53_duplicate_route_or_blank_trigger_rejected) ... ok
+test_54_native_role_skill_filter_matches_routing_exactly (test_agentctl.AgentctlTests.test_54_native_role_skill_filter_matches_routing_exactly) ... ok
+test_55_rendered_skill_root_handles_spaces_and_unicode (test_agentctl.AgentctlTests.test_55_rendered_skill_root_handles_spaces_and_unicode) ... ok
+test_56_local_managed_disable_is_never_reenabled (test_agentctl.AgentctlTests.test_56_local_managed_disable_is_never_reenabled) ... ok
+test_57_parent_unmanaged_disable_and_settings_survive_array_replacement (test_agentctl.AgentctlTests.test_57_parent_unmanaged_disable_and_settings_survive_array_replacement) ... ok
+test_58_foreign_yaml_metadata_and_multiline_description_still_detect_duplicate (test_agentctl.AgentctlTests.test_58_foreign_yaml_metadata_and_multiline_description_still_detect_duplicate) ... ok
+test_59_doctor_detects_new_nested_duplicate_after_install (test_agentctl.AgentctlTests.test_59_doctor_detects_new_nested_duplicate_after_install) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 9.114s
+
+OK
+
+$ python3 -m unittest discover -s tests -v -k test_6
+test_60_explicit_cli_plan_fails_if_binary_missing_without_writes (test_agentctl.AgentctlTests.test_60_explicit_cli_plan_fails_if_binary_missing_without_writes) ... ok
+test_61_default_apply_does_not_silently_skip_missing_cli (test_agentctl.AgentctlTests.test_61_default_apply_does_not_silently_skip_missing_cli) ... ok
+test_62_doctor_requested_cli_missing_is_nonzero (test_agentctl.AgentctlTests.test_62_doctor_requested_cli_missing_is_nonzero) ... ok
+test_63_new_skill_in_legacy_path_has_safe_error_not_keyerror (test_agentctl.AgentctlTests.test_63_new_skill_in_legacy_path_has_safe_error_not_keyerror) ... ok
+test_64_missing_local_reference_rejected_even_after_relock (test_agentctl.AgentctlTests.test_64_missing_local_reference_rejected_even_after_relock) ... ok
+test_65_invalid_upstream_blob_rejected (test_agentctl.AgentctlTests.test_65_invalid_upstream_blob_rejected) ... ok
+test_66_conflicting_local_enable_entries_fail_before_write (test_agentctl.AgentctlTests.test_66_conflicting_local_enable_entries_fail_before_write) ... ok
+test_67_cli_and_skip_flags_cannot_conflict (test_agentctl.AgentctlTests.test_67_cli_and_skip_flags_cannot_conflict) ... ok
+test_68_skills_role_command_is_readonly_and_narrow (test_agentctl.AgentctlTests.test_68_skills_role_command_is_readonly_and_narrow) ... ok
+test_69_routing_changes_require_explicit_sync (test_agentctl.AgentctlTests.test_69_routing_changes_require_explicit_sync) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 9.555s
+
+OK
+
+$ python3 -m unittest discover -s tests -v -k test_7
+test_70_a11y_units_and_browser_isolation_guards_present (test_agentctl.AgentctlTests.test_70_a11y_units_and_browser_isolation_guards_present) ... ok
+test_71_orchestration_remains_manual_other_selected_skills_are_conditional (test_agentctl.AgentctlTests.test_71_orchestration_remains_manual_other_selected_skills_are_conditional) ... ok
+test_72_foreign_linked_skill_duplicate_detected (test_agentctl.AgentctlTests.test_72_foreign_linked_skill_duplicate_detected) ... ok
+test_73_parent_enabled_unassigned_skill_cannot_expand_child_routing (test_agentctl.AgentctlTests.test_73_parent_enabled_unassigned_skill_cannot_expand_child_routing) ... ok
+test_74_main_routing_requires_all_managed_skill_conditions (test_agentctl.AgentctlTests.test_74_main_routing_requires_all_managed_skill_conditions) ... ok
+test_75_tests_ownership_and_security_inconclusive_are_explicit (test_agentctl.AgentctlTests.test_75_tests_ownership_and_security_inconclusive_are_explicit) ... ok
+test_76_legacy_disabled_skill_path_rebased_without_reenable (test_agentctl.AgentctlTests.test_76_legacy_disabled_skill_path_rebased_without_reenable) ... ok
+test_77_duplicate_name_fields_in_foreign_skill_fail_closed (test_agentctl.AgentctlTests.test_77_duplicate_name_fields_in_foreign_skill_fail_closed) ... ok
+test_78_app_changed_skill_disable_propagates_on_sync (test_agentctl.AgentctlTests.test_78_app_changed_skill_disable_propagates_on_sync) ... ok
+test_79_legacy_rebase_conflict_is_not_silently_resolved (test_agentctl.AgentctlTests.test_79_legacy_rebase_conflict_is_not_silently_resolved) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 6.789s
+
+OK
+
+$ python3 -m unittest discover -s tests -v -k test_8
+test_80_same_canonical_external_skill_replacement_is_visible_and_restorable (test_agentctl.AgentctlTests.test_80_same_canonical_external_skill_replacement_is_visible_and_restorable) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 2.143s
+
+OK
+
+$ python3 -m unittest discover -s tests -v -k test_upgrade
+test_upgrade_01_real_v1_to_v2_rollback_and_uninstall (test_upgrade.UpgradeTests.test_upgrade_01_real_v1_to_v2_rollback_and_uninstall) ... ok
+test_upgrade_02_direct_modified_v1_is_not_overwritten (test_upgrade.UpgradeTests.test_upgrade_02_direct_modified_v1_is_not_overwritten) ... ok
+test_upgrade_03_local_mcp_trust_and_foreign_skills_survive (test_upgrade.UpgradeTests.test_upgrade_03_local_mcp_trust_and_foreign_skills_survive) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 6.654s
+
+OK

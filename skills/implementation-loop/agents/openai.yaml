@@ -1,0 +1,8 @@
+interface:
+  display_name: "구현 절차"
+  short_description: "implementation-loop · 작업 조건에 맞는 범위만 적용"
+  default_prompt: "$implementation-loop를 사용해 이 소유 작업을 최소 변경으로 구현하고 검증해 주세요."
+
+# 기존 Astra 이후의 얇은 지침을 유지한다. 전체 절차는 명시 요청 때만 사용한다.
+policy:
+  allow_implicit_invocation: true

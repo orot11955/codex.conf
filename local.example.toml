@@ -1,0 +1,24 @@
+# 예시만 Git에 둔다. 실제 파일은 $CODEX_HOME/.codex-conf/machine.toml (0600).
+# install 시 기존 config.toml의 기기별 값은 최초 한 번 자동 보존한다.
+# model/추론/agents/service_tier/approvals_reviewer는 공통 원본에서 수정한다.
+# 비밀정보 값은 가능하면 환경 변수/OS 자격증명 저장소를 이용한다.
+
+# cli_auth_credentials_store = "auto"  # 기존 값을 우선 보존, 임의로 변경하지 말 것
+# mcp_oauth_credentials_store = "auto"
+# notify = ["/absolute/path/to/local-notify"]
+
+# 필요한 프로젝트만 지정한다. 홈 전체를 새로 trusted로 만들지 않는다.
+# [projects."/absolute/path/to/project"]
+# trust_level = "trusted"
+
+# [mcp_servers.example]
+# command = "/absolute/path/to/example-mcp"
+# args = []
+# env_vars = ["EXAMPLE_API_KEY"]
+
+# 역할이 배정했더라도 이 기기에서 특정 스킬을 끌 수 있다. source가 아니라 로컬 예외다.
+# [[skills.config]]
+# path = "/absolute/path/to/home/.agents/skills/playwright-cli/SKILL.md"
+# enabled = false
+# 설치 후 직접 config를 바꿨다면 다음 sync가 로컬 값을 보존하고 역할 설정에도 반영한다.
+# doctor는 배정된 관리 스킬 비활성을 경고한다. 자동으로 다시 켜지 않는다.

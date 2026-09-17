@@ -1,0 +1,230 @@
+codex.conf 2026.09.17-unified.3 — final verification
+Date: 2026-09-17
+Python: 3.13.5 (main, Jul 15 2026, 20:25:40) [GCC 14.2.0]
+OS: Linux-6.18.44-x86_64-with-glibc2.41
+
+
+========================================================================
+conf-base
+Working directory: codex.conf
+Command: python3 -B -m unittest discover -s tests -p test_agentctl.py -v
+Exit: 0
+test_01_original_model_policy_and_role_names_preserved (test_agentctl.AgentctlTests.test_01_original_model_policy_and_role_names_preserved) ... ok
+test_02_unknown_shared_key_rejected (test_agentctl.AgentctlTests.test_02_unknown_shared_key_rejected) ... ok
+test_03_malformed_toml_rejected_before_install (test_agentctl.AgentctlTests.test_03_malformed_toml_rejected_before_install) ... ok
+test_04_skill_hash_requires_review_and_relock (test_agentctl.AgentctlTests.test_04_skill_hash_requires_review_and_relock) ... ok
+test_05_malformed_yaml_rejected (test_agentctl.AgentctlTests.test_05_malformed_yaml_rejected) ... ok
+test_06_default_install_is_read_only_preview (test_agentctl.AgentctlTests.test_06_default_install_is_read_only_preview) ... ok
+test_07_install_uninstall_preserve_private_and_unmanaged (test_agentctl.AgentctlTests.test_07_install_uninstall_preserve_private_and_unmanaged) ... ok
+test_08_repeated_install_is_idempotent (test_agentctl.AgentctlTests.test_08_repeated_install_is_idempotent) ... ok
+test_09_legacy_whole_agent_link_detached_and_restored (test_agentctl.AgentctlTests.test_09_legacy_whole_agent_link_detached_and_restored) ... ok
+test_10_legacy_skills_migrate_once_without_resurrection (test_agentctl.AgentctlTests.test_10_legacy_skills_migrate_once_without_resurrection) ... ok
+test_11_legacy_tester_known_only (test_agentctl.AgentctlTests.test_11_legacy_tester_known_only) ... ok
+test_12_unknown_legacy_tester_fails_closed (test_agentctl.AgentctlTests.test_12_unknown_legacy_tester_fails_closed) ... ok
+test_13_unknown_legacy_skill_fails_closed (test_agentctl.AgentctlTests.test_13_unknown_legacy_skill_fails_closed) ... ok
+test_14_existing_canonical_skill_is_backed_up (test_agentctl.AgentctlTests.test_14_existing_canonical_skill_is_backed_up) ... ok
+test_15_duplicate_name_in_different_skill_folder_rejected (test_agentctl.AgentctlTests.test_15_duplicate_name_in_different_skill_folder_rejected) ... ok
+test_16_duplicate_custom_agent_name_rejected (test_agentctl.AgentctlTests.test_16_duplicate_custom_agent_name_rejected) ... ok
+test_17_global_override_is_not_deleted (test_agentctl.AgentctlTests.test_17_global_override_is_not_deleted) ... ok
+test_18_source_edit_does_not_change_active_install (test_agentctl.AgentctlTests.test_18_source_edit_does_not_change_active_install) ... ok
+test_19_direct_managed_edit_is_never_overwritten (test_agentctl.AgentctlTests.test_19_direct_managed_edit_is_never_overwritten) ... ok
+test_20_app_written_trust_and_ui_are_captured (test_agentctl.AgentctlTests.test_20_app_written_trust_and_ui_are_captured) ... ok
+test_21_explicit_machine_edits_are_applied (test_agentctl.AgentctlTests.test_21_explicit_machine_edits_are_applied) ... ok
+test_22_machine_cannot_change_model_policy (test_agentctl.AgentctlTests.test_22_machine_cannot_change_model_policy) ... ok
+test_23_shared_runtime_model_change_is_not_silently_adopted (test_agentctl.AgentctlTests.test_23_shared_runtime_model_change_is_not_silently_adopted) ... ok
+test_24_removed_skill_restores_baseline_and_releases_ownership (test_agentctl.AgentctlTests.test_24_removed_skill_restores_baseline_and_releases_ownership) ... ok
+test_25_backup_tampering_stops_uninstall (test_agentctl.AgentctlTests.test_25_backup_tampering_stops_uninstall) ... ok
+test_26_source_link_rejected (test_agentctl.AgentctlTests.test_26_source_link_rejected) ... ok
+test_27_legacy_whole_skills_link_fails_before_writes (test_agentctl.AgentctlTests.test_27_legacy_whole_skills_link_fails_before_writes) ... ok
+test_28_state_target_escape_rejected (test_agentctl.AgentctlTests.test_28_state_target_escape_rejected) ... ok
+test_29_home_itself_and_repo_roots_rejected (test_agentctl.AgentctlTests.test_29_home_itself_and_repo_roots_rejected) ... ok
+test_30_repo_relocation_does_not_break_install (test_agentctl.AgentctlTests.test_30_repo_relocation_does_not_break_install) ... ok
+test_31_state_import_copies_only_markdown_without_overwrite (test_agentctl.AgentctlTests.test_31_state_import_copies_only_markdown_without_overwrite) ... ok
+test_32_state_import_symlink_parent_rejected (test_agentctl.AgentctlTests.test_32_state_import_symlink_parent_rejected) ... ok
+test_33_os_layers_do_not_force_auth_or_change_models (test_agentctl.AgentctlTests.test_33_os_layers_do_not_force_auth_or_change_models) ... ok
+test_34_existing_credentials_store_and_trust_preserved_locally (test_agentctl.AgentctlTests.test_34_existing_credentials_store_and_trust_preserved_locally) ... ok
+test_35_failed_cli_preflight_leaves_original_files (test_agentctl.AgentctlTests.test_35_failed_cli_preflight_leaves_original_files) ... ok
+test_36_successful_cli_preflight_uses_config_only_command (test_agentctl.AgentctlTests.test_36_successful_cli_preflight_uses_config_only_command) ... ok
+test_37_fault_injection_restores_prior_files (test_agentctl.AgentctlTests.test_37_fault_injection_restores_prior_files) ... ok
+test_38_incomplete_journal_recovers (test_agentctl.AgentctlTests.test_38_incomplete_journal_recovers) ... ok
+test_39_uninstall_does_not_depend_on_new_broken_source (test_agentctl.AgentctlTests.test_39_uninstall_does_not_depend_on_new_broken_source) ... ok
+test_40_profiles_are_explicit_separate_files (test_agentctl.AgentctlTests.test_40_profiles_are_explicit_separate_files) ... ok
+test_41_recursive_agents_disabled_in_rendered_config (test_agentctl.AgentctlTests.test_41_recursive_agents_disabled_in_rendered_config) ... ok
+test_42_toml_round_trip_nested_arrays_inline_tables_and_keys (test_agentctl.AgentctlTests.test_42_toml_round_trip_nested_arrays_inline_tables_and_keys) ... ok
+test_43_manager_symlink_rejected (test_agentctl.AgentctlTests.test_43_manager_symlink_rejected) ... ok
+test_44_root_state_and_system_copies_not_in_runtime_sources (test_agentctl.AgentctlTests.test_44_root_state_and_system_copies_not_in_runtime_sources) ... ok
+test_45_removed_old_repo_restores_saved_content_not_broken_links (test_agentctl.AgentctlTests.test_45_removed_old_repo_restores_saved_content_not_broken_links) ... ok
+test_46_changed_relative_link_target_not_overwritten_on_rollback (test_agentctl.AgentctlTests.test_46_changed_relative_link_target_not_overwritten_on_rollback) ... ok
+test_47_tampered_resolved_backup_blocks_all_restore_writes (test_agentctl.AgentctlTests.test_47_tampered_resolved_backup_blocks_all_restore_writes) ... ok
+test_48_tampered_retired_skill_baseline_blocks_sync (test_agentctl.AgentctlTests.test_48_tampered_retired_skill_baseline_blocks_sync) ... ok
+test_49_doctor_flags_source_install_version_difference (test_agentctl.AgentctlTests.test_49_doctor_flags_source_install_version_difference) ... ok
+test_50_eighteen_skills_ten_public_and_one_user_wiki_adaptation (test_agentctl.AgentctlTests.test_50_eighteen_skills_ten_public_and_one_user_wiki_adaptation) ... ok
+test_51_unknown_route_skill_rejected (test_agentctl.AgentctlTests.test_51_unknown_route_skill_rejected) ... ok
+test_52_readonly_role_cannot_be_assigned_browser_skill (test_agentctl.AgentctlTests.test_52_readonly_role_cannot_be_assigned_browser_skill) ... ok
+test_53_duplicate_route_or_blank_trigger_rejected (test_agentctl.AgentctlTests.test_53_duplicate_route_or_blank_trigger_rejected) ... ok
+test_54_native_role_skill_filter_matches_routing_exactly (test_agentctl.AgentctlTests.test_54_native_role_skill_filter_matches_routing_exactly) ... ok
+test_55_rendered_skill_root_handles_spaces_and_unicode (test_agentctl.AgentctlTests.test_55_rendered_skill_root_handles_spaces_and_unicode) ... ok
+test_56_local_managed_disable_is_never_reenabled (test_agentctl.AgentctlTests.test_56_local_managed_disable_is_never_reenabled) ... ok
+test_57_parent_unmanaged_disable_and_settings_survive_array_replacement (test_agentctl.AgentctlTests.test_57_parent_unmanaged_disable_and_settings_survive_array_replacement) ... ok
+test_58_foreign_yaml_metadata_and_multiline_description_still_detect_duplicate (test_agentctl.AgentctlTests.test_58_foreign_yaml_metadata_and_multiline_description_still_detect_duplicate) ... ok
+test_59_doctor_detects_new_nested_duplicate_after_install (test_agentctl.AgentctlTests.test_59_doctor_detects_new_nested_duplicate_after_install) ... ok
+test_60_explicit_cli_plan_fails_if_binary_missing_without_writes (test_agentctl.AgentctlTests.test_60_explicit_cli_plan_fails_if_binary_missing_without_writes) ... ok
+test_61_default_apply_does_not_silently_skip_missing_cli (test_agentctl.AgentctlTests.test_61_default_apply_does_not_silently_skip_missing_cli) ... ok
+test_62_doctor_requested_cli_missing_is_nonzero (test_agentctl.AgentctlTests.test_62_doctor_requested_cli_missing_is_nonzero) ... ok
+test_63_new_skill_in_legacy_path_has_safe_error_not_keyerror (test_agentctl.AgentctlTests.test_63_new_skill_in_legacy_path_has_safe_error_not_keyerror) ... ok
+test_64_missing_local_reference_rejected_even_after_relock (test_agentctl.AgentctlTests.test_64_missing_local_reference_rejected_even_after_relock) ... ok
+test_65_invalid_upstream_blob_rejected (test_agentctl.AgentctlTests.test_65_invalid_upstream_blob_rejected) ... ok
+test_66_conflicting_local_enable_entries_fail_before_write (test_agentctl.AgentctlTests.test_66_conflicting_local_enable_entries_fail_before_write) ... ok
+test_67_cli_and_skip_flags_cannot_conflict (test_agentctl.AgentctlTests.test_67_cli_and_skip_flags_cannot_conflict) ... ok
+test_68_skills_role_command_is_readonly_and_narrow (test_agentctl.AgentctlTests.test_68_skills_role_command_is_readonly_and_narrow) ... ok
+test_69_routing_changes_require_explicit_sync (test_agentctl.AgentctlTests.test_69_routing_changes_require_explicit_sync) ... ok
+test_70_a11y_units_and_browser_isolation_guards_present (test_agentctl.AgentctlTests.test_70_a11y_units_and_browser_isolation_guards_present) ... ok
+test_71_orchestration_remains_manual_other_selected_skills_are_conditional (test_agentctl.AgentctlTests.test_71_orchestration_remains_manual_other_selected_skills_are_conditional) ... ok
+test_72_foreign_linked_skill_duplicate_detected (test_agentctl.AgentctlTests.test_72_foreign_linked_skill_duplicate_detected) ... ok
+test_73_parent_enabled_unassigned_skill_cannot_expand_child_routing (test_agentctl.AgentctlTests.test_73_parent_enabled_unassigned_skill_cannot_expand_child_routing) ... ok
+test_74_main_routing_requires_all_managed_skill_conditions (test_agentctl.AgentctlTests.test_74_main_routing_requires_all_managed_skill_conditions) ... ok
+test_75_tests_ownership_and_security_inconclusive_are_explicit (test_agentctl.AgentctlTests.test_75_tests_ownership_and_security_inconclusive_are_explicit) ... ok
+test_76_legacy_disabled_skill_path_rebased_without_reenable (test_agentctl.AgentctlTests.test_76_legacy_disabled_skill_path_rebased_without_reenable) ... ok
+test_77_duplicate_name_fields_in_foreign_skill_fail_closed (test_agentctl.AgentctlTests.test_77_duplicate_name_fields_in_foreign_skill_fail_closed) ... ok
+test_78_app_changed_skill_disable_propagates_on_sync (test_agentctl.AgentctlTests.test_78_app_changed_skill_disable_propagates_on_sync) ... ok
+test_79_legacy_rebase_conflict_is_not_silently_resolved (test_agentctl.AgentctlTests.test_79_legacy_rebase_conflict_is_not_silently_resolved) ... ok
+test_80_same_canonical_external_skill_replacement_is_visible_and_restorable (test_agentctl.AgentctlTests.test_80_same_canonical_external_skill_replacement_is_visible_and_restorable) ... ok
+
+----------------------------------------------------------------------
+Ran 80 tests in 103.993s
+
+OK
+
+
+========================================================================
+v1-upgrade
+Working directory: codex.conf
+Command: python3 -B -m unittest discover -s tests -p test_upgrade.py -v
+Exit: 0
+test_upgrade_01_real_v1_to_v2_rollback_and_uninstall (test_upgrade.UpgradeTests.test_upgrade_01_real_v1_to_v2_rollback_and_uninstall) ... ok
+test_upgrade_02_direct_modified_v1_is_not_overwritten (test_upgrade.UpgradeTests.test_upgrade_02_direct_modified_v1_is_not_overwritten) ... ok
+test_upgrade_03_local_mcp_trust_and_foreign_skills_survive (test_upgrade.UpgradeTests.test_upgrade_03_local_mcp_trust_and_foreign_skills_survive) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 7.701s
+
+OK
+
+
+========================================================================
+wiki-session
+Working directory: codex.conf
+Command: python3 -B -m unittest discover -s tests -p test_wiki_integration.py -v
+Exit: 0
+test_wiki_01_unconfigured_status_optional (test_wiki_integration.WikiSessionTests.test_wiki_01_unconfigured_status_optional) ... ok
+test_wiki_02_configure_plan_no_writes (test_wiki_integration.WikiSessionTests.test_wiki_02_configure_plan_no_writes) ... ok
+test_wiki_03_configure_apply_only_binding (test_wiki_integration.WikiSessionTests.test_wiki_03_configure_apply_only_binding) ... ok
+test_wiki_04_configure_idempotent (test_wiki_integration.WikiSessionTests.test_wiki_04_configure_idempotent) ... ok
+test_wiki_05_home_switch_requires_deliberate_migration (test_wiki_integration.WikiSessionTests.test_wiki_05_home_switch_requires_deliberate_migration) ... ok
+test_wiki_06_config_version_fail_closed (test_wiki_integration.WikiSessionTests.test_wiki_06_config_version_fail_closed) ... ok
+test_wiki_07_home_and_codex_roots_rejected (test_wiki_integration.WikiSessionTests.test_wiki_07_home_and_codex_roots_rejected) ... ok
+test_wiki_08_symlinked_runtime_rejected (test_wiki_integration.WikiSessionTests.test_wiki_08_symlinked_runtime_rejected) ... ok
+test_wiki_09_unpinned_search_no_current_fallback (test_wiki_integration.WikiSessionTests.test_wiki_09_unpinned_search_no_current_fallback) ... ok
+test_wiki_10_pinned_context_no_model (test_wiki_integration.WikiSessionTests.test_wiki_10_pinned_context_no_model) ... ok
+test_wiki_11_query_uses_bound_project (test_wiki_integration.WikiSessionTests.test_wiki_11_query_uses_bound_project) ... ok
+test_wiki_12_query_cross_project_rejected (test_wiki_integration.WikiSessionTests.test_wiki_12_query_cross_project_rejected) ... ok
+test_wiki_13_read_section (test_wiki_integration.WikiSessionTests.test_wiki_13_read_section) ... ok
+test_wiki_14_read_other_project_rejected (test_wiki_integration.WikiSessionTests.test_wiki_14_read_other_project_rejected) ... ok
+test_wiki_15_global_read_requires_explicit_flag (test_wiki_integration.WikiSessionTests.test_wiki_15_global_read_requires_explicit_flag) ... ok
+test_wiki_16_candidate_records_sha_and_stays_local (test_wiki_integration.WikiSessionTests.test_wiki_16_candidate_records_sha_and_stays_local) ... ok
+test_wiki_17_candidate_wrong_project_rejected (test_wiki_integration.WikiSessionTests.test_wiki_17_candidate_wrong_project_rejected) ... ok
+test_wiki_18_outbox_redirection_rejected (test_wiki_integration.WikiSessionTests.test_wiki_18_outbox_redirection_rejected) ... ok
+test_wiki_19_other_runtime_snapshot_rejected (test_wiki_integration.WikiSessionTests.test_wiki_19_other_runtime_snapshot_rejected) ... ok
+test_wiki_20_current_advance_preserves_session (test_wiki_integration.WikiSessionTests.test_wiki_20_current_advance_preserves_session) ... ok
+test_wiki_21_operator_commands_rejected_in_session (test_wiki_integration.WikiSessionTests.test_wiki_21_operator_commands_rejected_in_session) ... ok
+test_wiki_22_launch_preserves_policy_and_pins_all_context (test_wiki_integration.WikiSessionTests.test_wiki_22_launch_preserves_policy_and_pins_all_context) ... ok
+test_wiki_23_resume_needs_original_sha (test_wiki_integration.WikiSessionTests.test_wiki_23_resume_needs_original_sha) ... ok
+test_wiki_24_missing_snapshot_never_latest_fallback (test_wiki_integration.WikiSessionTests.test_wiki_24_missing_snapshot_never_latest_fallback) ... ok
+test_wiki_25_project_marker_local_only (test_wiki_integration.WikiSessionTests.test_wiki_25_project_marker_local_only) ... ok
+test_wiki_26_cli_cannot_override_pinned_keys (test_wiki_integration.WikiSessionTests.test_wiki_26_cli_cannot_override_pinned_keys) ... ok
+test_wiki_27_http_credentials_rejected_before_git (test_wiki_integration.WikiSessionTests.test_wiki_27_http_credentials_rejected_before_git) ... ok
+test_wiki_28_snapshot_length_41_invalid (test_wiki_integration.WikiSessionTests.test_wiki_28_snapshot_length_41_invalid) ... ok
+test_wiki_29_core_outbox_guard_even_without_facade (test_wiki_integration.WikiSessionTests.test_wiki_29_core_outbox_guard_even_without_facade) ... ok
+
+----------------------------------------------------------------------
+Ran 29 tests in 94.186s
+
+OK
+
+
+========================================================================
+wiki-upgrade
+Working directory: codex.conf
+Command: python3 -B -m unittest discover -s tests -p test_wiki_upgrade.py -v
+Exit: 0
+test_wiki_upgrade_01_v2_v3_rollback_preserves_wiki_data_and_binding (test_wiki_upgrade.WikiUpgradeTests.test_wiki_upgrade_01_v2_v3_rollback_preserves_wiki_data_and_binding) ... ok
+test_wiki_upgrade_02_adoption_explicit_and_original_restored (test_wiki_upgrade.WikiUpgradeTests.test_wiki_upgrade_02_adoption_explicit_and_original_restored) ... ok
+test_wiki_upgrade_03_drift_prevents_execution (test_wiki_upgrade.WikiUpgradeTests.test_wiki_upgrade_03_drift_prevents_execution) ... ok
+test_wiki_upgrade_04_rooty_installer_never_owns_codex_skill (test_wiki_upgrade.WikiUpgradeTests.test_wiki_upgrade_04_rooty_installer_never_owns_codex_skill) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 14.144s
+
+OK
+
+
+========================================================================
+wiki-core
+Working directory: codex.conf/integrations/rooty-wiki
+Command: python3 -B -m unittest discover -s tests -p test_wiki.py -v
+Exit: 0
+test_candidate_on_main_not_in_verified_search (test_wiki.WikiTests.test_candidate_on_main_not_in_verified_search) ... ok
+test_codex_wrapper_injects_pinned_env_without_sandbox_override (test_wiki.WikiTests.test_codex_wrapper_injects_pinned_env_without_sandbox_override) ... ok
+test_concurrent_candidates_unique_complete (test_wiki.WikiTests.test_concurrent_candidates_unique_complete) ... ok
+test_duplicate_id_blocks_publish (test_wiki.WikiTests.test_duplicate_id_blocks_publish) ... ok
+test_empty_wiki_does_not_invent_knowledge (test_wiki.WikiTests.test_empty_wiki_does_not_invent_knowledge) ... ok
+test_missing_receipt_recovers_remote_branch (test_wiki.WikiTests.test_missing_receipt_recovers_remote_branch) ... ok
+test_read_returns_safety_and_checks_hash (test_wiki.WikiTests.test_read_returns_safety_and_checks_hash) ... ok
+test_resume_requires_original_sha (test_wiki.WikiTests.test_resume_requires_original_sha) ... ok
+test_submit_idempotent_and_main_unchanged (test_wiki.WikiTests.test_submit_idempotent_and_main_unchanged) ... ok
+test_submitted_candidate_mutation_is_rejected (test_wiki.WikiTests.test_submitted_candidate_mutation_is_rejected) ... ok
+test_sync_failure_keeps_current_and_outbox (test_wiki.WikiTests.test_sync_failure_keeps_current_and_outbox) ... ok
+test_sync_preserves_pinned_revision (test_wiki.WikiTests.test_sync_preserves_pinned_revision) ... ok
+test_unsafe_tar_link_and_traversal_rejected (test_wiki.WikiTests.test_unsafe_tar_link_and_traversal_rejected) ... ok
+test_yaml_alias_duplicate_and_unsafe_tags_rejected (test_wiki.WikiTests.test_yaml_alias_duplicate_and_unsafe_tags_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 48.180s
+
+OK
+
+
+========================================================================
+rooty-kit
+Working directory: codex.conf/integrations/rooty-wiki
+Command: python3 -B -m unittest discover -s tests -p test_rooty.py -v
+Exit: 0
+test_apply_idempotent (test_rooty.InstallerTests.test_apply_idempotent) ... ok
+test_apply_preserves_native_data_and_original_commands (test_rooty.InstallerTests.test_apply_preserves_native_data_and_original_commands) ... ok
+test_conflicting_skill_preserved_until_explicit_backup (test_rooty.InstallerTests.test_conflicting_skill_preserved_until_explicit_backup) ... ok
+test_existing_different_launcher_not_overwritten (test_rooty.InstallerTests.test_existing_different_launcher_not_overwritten) ... ok
+test_incorrect_profile_path_and_nonlocal_backend_fail_closed (test_rooty.InstallerTests.test_incorrect_profile_path_and_nonlocal_backend_fail_closed) ... ok
+test_plan_has_no_side_effects (test_rooty.InstallerTests.test_plan_has_no_side_effects) ... ok
+test_settings_remote_credentials_rejected_before_git (test_rooty.InstallerTests.test_settings_remote_credentials_rejected_before_git) ... ok
+test_candidate_has_rooty_provenance_and_project_guard (test_rooty.RootyTests.test_candidate_has_rooty_provenance_and_project_guard) ... ok
+test_codex_candidate_accepted_on_main_can_be_reviewed_without_local_copy (test_rooty.RootyTests.test_codex_candidate_accepted_on_main_can_be_reviewed_without_local_copy) ... ok
+test_codex_project_environment_cannot_override_rooty_scope (test_rooty.RootyTests.test_codex_project_environment_cannot_override_rooty_scope) ... ok
+test_concurrent_task_records_are_distinct (test_rooty.RootyTests.test_concurrent_task_records_are_distinct) ... ok
+test_cross_project_read_rejected (test_rooty.RootyTests.test_cross_project_read_rejected) ... ok
+test_empty_pending_is_local_program_and_records_no_llm (test_rooty.RootyTests.test_empty_pending_is_local_program_and_records_no_llm) ... ok
+test_metrics_contain_no_queries_or_document_body (test_rooty.RootyTests.test_metrics_contain_no_queries_or_document_body) ... ok
+test_missing_task_never_falls_back_to_current (test_rooty.RootyTests.test_missing_task_never_falls_back_to_current) ... ok
+test_old_codex_environment_does_not_override_rooty_task (test_rooty.RootyTests.test_old_codex_environment_does_not_override_rooty_task) ... ok
+test_pending_pagination_explicit (test_rooty.RootyTests.test_pending_pagination_explicit) ... ok
+test_review_packet_reuse_hash_and_privacy (test_rooty.RootyTests.test_review_packet_reuse_hash_and_privacy) ... ok
+test_review_rejects_cross_project_and_oversized_batch (test_rooty.RootyTests.test_review_rejects_cross_project_and_oversized_batch) ... ok
+test_reviewer_init_preview_and_same_home_refusal (test_rooty.RootyTests.test_reviewer_init_preview_and_same_home_refusal) ... ok
+test_rooty_bridge_exposes_no_sync_submit_or_arbitrary_exec (test_rooty.RootyTests.test_rooty_bridge_exposes_no_sync_submit_or_arbitrary_exec) ... ok
+test_rooty_task_A_stays_old_and_B_reads_new_without_process_restart (test_rooty.RootyTests.test_rooty_task_A_stays_old_and_B_reads_new_without_process_restart) ... ok
+test_snapshot_publication_excludes_tools_skills_and_native_state (test_rooty.RootyTests.test_snapshot_publication_excludes_tools_skills_and_native_state) ... ok
+test_tampered_summary_cannot_be_returned_by_search (test_rooty.RootyTests.test_tampered_summary_cannot_be_returned_by_search) ... ok
+
+----------------------------------------------------------------------
+Ran 24 tests in 86.898s
+
+OK

@@ -1,0 +1,6 @@
+interface:
+  display_name: "웹 UI 품질 검수"
+  short_description: "web-design-guidelines · 작업 조건에 맞는 범위만 적용"
+  default_prompt: "$web-design-guidelines 현재 작업의 관련 범위만 검토하고 실제 실행과 미실행을 구분해줘."
+policy:
+  allow_implicit_invocation: true

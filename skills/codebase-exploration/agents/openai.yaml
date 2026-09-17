@@ -1,0 +1,8 @@
+interface:
+  display_name: "코드베이스 탐색"
+  short_description: "codebase-exploration · 작업 조건에 맞는 범위만 적용"
+  default_prompt: "$codebase-exploration을 사용해 변경 전 필요한 코드베이스 근거를 수집해 주세요."
+
+# 기존 Astra 이후의 얇은 지침을 유지한다. 전체 절차는 명시 요청 때만 사용한다.
+policy:
+  allow_implicit_invocation: true

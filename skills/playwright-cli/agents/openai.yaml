@@ -1,0 +1,6 @@
+interface:
+  display_name: "브라우저 재현·검증"
+  short_description: "playwright-cli · 작업 조건에 맞는 범위만 적용"
+  default_prompt: "$playwright-cli 현재 작업의 관련 범위만 검토하고 실제 실행과 미실행을 구분해줘."
+policy:
+  allow_implicit_invocation: true

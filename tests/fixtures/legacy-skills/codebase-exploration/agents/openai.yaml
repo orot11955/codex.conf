@@ -1,0 +1,4 @@
+interface:
+  display_name: "코드베이스 탐색"
+  short_description: "코드베이스의 읽기 전용 근거를 체계적으로 수집합니다."
+  default_prompt: "$codebase-exploration을 사용해 변경 전 필요한 코드베이스 근거를 수집해 주세요."

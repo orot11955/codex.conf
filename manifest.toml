@@ -1,0 +1,7 @@
+format_version = 1
+package_name = "codex.conf"
+package_version = "2026.09.17-unified.3"
+# 실제 기기에서 확인한 Codex 버전 문자열을 채우면 doctor/CLI 검사에서 비교한다.
+# 검증하지 않은 버전 번호를 임의로 고정하지 않는다.
+expected_codex_version = ""
+skills = ["task-orchestration", "codebase-exploration", "change-design", "implementation-loop", "change-verification", "change-review", "security-review", "frontend-design", "web-design-guidelines", "accessibility", "performance", "vercel-react-best-practices", "vercel-composition-patterns", "nestjs-best-practices", "java-springboot", "systematic-debugging", "playwright-cli", "shared-wiki"]

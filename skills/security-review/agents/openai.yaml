@@ -1,0 +1,8 @@
+interface:
+  display_name: "보안 검토"
+  short_description: "security-review · 작업 조건에 맞는 범위만 적용"
+  default_prompt: "$security-review를 사용해 조건부 보안 검토 게이트 대상 변경을 읽기 전용으로 검토하고, 판정을 `통과`, `조건부 통과`, `재작업 필요` 중 하나로 반환해 주세요."
+
+# 기존 Astra 이후의 얇은 지침을 유지한다. 전체 절차는 명시 요청 때만 사용한다.
+policy:
+  allow_implicit_invocation: true

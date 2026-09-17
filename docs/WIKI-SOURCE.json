@@ -1,0 +1,11 @@
+{
+  "build_version": "2026.09.17-unified.3",
+  "input_archives_sha256": {
+    "codex.conf-unified-2026-09-17.zip": "0dc7a7fea630db2d2e907b3e675f3fc589c66ed0c5977c6ca8c8d2306bbd2ab6",
+    "rooty-wiki-setup-v3.zip": "c7dbaf77fd9af5232d845daecd03a8c740f7734b40f00498a26ee808d722c8ff"
+  },
+  "wiki_source_version": "3.0.0",
+  "wiki_integrated_version": "3.0.1-conf.3",
+  "canonical_core": "skills/shared-wiki/scripts/wiki.py",
+  "note": "Input archives are unchanged. Runtime operations in tests use temporary paths/local Git; no live remote or account."
+}

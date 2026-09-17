@@ -1,0 +1,101 @@
+format_version = 1
+# Single source: installation generates per-role hints and native skills.config filters.
+
+[roles.main]
+rules = [
+  { skill = "shared-wiki", when = "프로젝트 관례·과거 해결법·설계/운영 근거가 필요할 때만 조회. main만 고정 SHA에서 검색·필요한 절 읽기·검증 근거가 있는 새 후보 기록. 일반 작업에서 sync/submit/Git/승격 금지." },
+  { skill = "task-orchestration", when = "사용자가 전체 orchestration 절차를 명시했을 때만" },
+  { skill = "codebase-exploration", when = "담당 코드·호출 흐름이 아직 불명확할 때" },
+  { skill = "change-design", when = "여러 계층의 계약·설계 결정이 필요할 때" },
+  { skill = "implementation-loop", when = "main이 비단순 구현을 직접 맡을 때" },
+  { skill = "change-verification", when = "최종 완료 근거 또는 검증 계획을 정리할 때" },
+  { skill = "change-review", when = "의미 있는 동작 변경을 직접 검토할 때" },
+  { skill = "security-review", when = "실제 신뢰 경계 변화 또는 보안 검토 요청이 있을 때" },
+  { skill = "frontend-design", when = "새 UI 설계/명시적 개편을 직접 맡을 때" },
+  { skill = "web-design-guidelines", when = "변경 UI 검수 시" },
+  { skill = "accessibility", when = "변경된 상호작용의 접근성 검증 시" },
+  { skill = "performance", when = "보고된 느림/성능 회귀 조사 시" },
+  { skill = "vercel-react-best-practices", when = "React/Next 변경을 직접 구현·검토할 때" },
+  { skill = "vercel-composition-patterns", when = "재사용 React API의 복잡성 문제를 설계할 때" },
+  { skill = "nestjs-best-practices", when = "실제 NestJS 경로를 직접 구현·검토할 때" },
+  { skill = "java-springboot", when = "실제 Spring Boot 경로를 직접 구현·검토할 때" },
+  { skill = "systematic-debugging", when = "근거가 부족한 버그 원인 조사 시" },
+  { skill = "playwright-cli", when = "실제 브라우저 재현/화면 확인이 필요한 때" },
+]
+
+[roles.scout]
+rules = [
+  { skill = "codebase-exploration", when = "코드 위치·호출 경로·검증 명령 조사 시" },
+  { skill = "systematic-debugging", when = "버그 조사 배정 시 근거·실패 경로만" },
+]
+
+[roles.architect]
+rules = [
+  { skill = "change-design", when = "계층 간 계약·대안·변경 순서 설계 시" },
+  { skill = "vercel-composition-patterns", when = "React 공용 컴포넌트 API 설계 시" },
+  { skill = "vercel-react-best-practices", when = "React/Next 서버·클라이언트 경계 설계 시" },
+  { skill = "nestjs-best-practices", when = "NestJS 모듈·DI·서비스 계약 설계 시" },
+  { skill = "java-springboot", when = "Spring Boot 서비스·DB 계약 설계 시" },
+  { skill = "frontend-design", when = "UI 구조·디자인 토큰 설계가 배정됐을 때만; 구현 금지" },
+]
+
+[roles.backend]
+rules = [
+  { skill = "implementation-loop", when = "비단순 backend 구현 시" },
+  { skill = "nestjs-best-practices", when = "실제 NestJS 코드 변경 시" },
+  { skill = "java-springboot", when = "실제 Spring Boot 코드 변경 시" },
+  { skill = "systematic-debugging", when = "원인이 불명확한 backend 실패 조사 시" },
+  { skill = "change-verification", when = "변경 backend의 관련 검증 시" },
+]
+
+[roles.frontend]
+rules = [
+  { skill = "implementation-loop", when = "비단순 frontend 구현 시" },
+  { skill = "frontend-design", when = "새 UI 설계 또는 명시적 개편 시" },
+  { skill = "vercel-react-best-practices", when = "React/Next 컴포넌트·fetching·렌더 변경 시" },
+  { skill = "vercel-composition-patterns", when = "공용 컴포넌트 API/상태 조합 개선 시" },
+  { skill = "web-design-guidelines", when = "변경 UI 인계 전 검수 시" },
+  { skill = "accessibility", when = "폼/dialog/메뉴 등 상호작용 변경 시" },
+  { skill = "performance", when = "실제 느림/성능 회귀 근거가 있을 때" },
+  { skill = "systematic-debugging", when = "UI 버그 원인이 불명확할 때" },
+  { skill = "playwright-cli", when = "실제 화면·키보드·반응형 확인 시" },
+  { skill = "change-verification", when = "변경 frontend의 관련 검증 시" },
+]
+
+[roles.executor]
+rules = [
+  { skill = "implementation-loop", when = "배정된 구현 절차의 실행 시" },
+  { skill = "systematic-debugging", when = "명령 실패 원인을 좁힐 때; 새 설계는 main에 반환" },
+  { skill = "change-verification", when = "정해진 명령의 결과를 검증할 때" },
+]
+
+[roles.critic]
+rules = [
+  { skill = "change-review", when = "diff의 정확성·회귀 독립 검토 시" },
+  { skill = "web-design-guidelines", when = "변경 UI의 코드·제공된 증거 검수 시" },
+  { skill = "accessibility", when = "접근성 영향 코드를 검수할 때" },
+  { skill = "vercel-react-best-practices", when = "React/Next 변경 검토 시" },
+  { skill = "vercel-composition-patterns", when = "React public props/state 계약 변경 검토 시" },
+  { skill = "nestjs-best-practices", when = "NestJS 변경 검토 시" },
+  { skill = "java-springboot", when = "Spring Boot 변경 검토 시" },
+  { skill = "performance", when = "제공된 성능 근거·코드의 병목 가설 검토 시" },
+]
+
+[roles.security]
+rules = [
+  { skill = "security-review", when = "실제 신뢰 경계 변경 또는 명시적 보안 검토 시" },
+  { skill = "nestjs-best-practices", when = "NestJS 권한·입력·데이터 경계를 해석할 때" },
+  { skill = "java-springboot", when = "Spring Security·세션·DB 경계를 해석할 때" },
+  { skill = "vercel-react-best-practices", when = "Next 서버 동작·캐시·민감 데이터 경계를 해석할 때" },
+]
+
+[roles.test]
+rules = [
+  { skill = "change-verification", when = "변경 범위의 검증 계획·회귀 테스트 시" },
+  { skill = "playwright-cli", when = "실제 UI/E2E 재현 또는 브라우저 근거 수집 시" },
+  { skill = "accessibility", when = "변경 상호작용의 키보드·접근성 테스트 시" },
+  { skill = "systematic-debugging", when = "테스트 실패/간헐 실패 조사 시" },
+  { skill = "nestjs-best-practices", when = "NestJS 테스트를 작성·실행할 때" },
+  { skill = "java-springboot", when = "Spring Boot 테스트를 작성·실행할 때" },
+  { skill = "performance", when = "성능 문제가 배정된 경우에만 동일 조건 비교 시" },
+]

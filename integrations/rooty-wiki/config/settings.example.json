@@ -1,0 +1,14 @@
+{
+  "gitea_remote": "",
+  "git_name": "",
+  "git_email": "",
+  "codex_wiki_home": "~/knowledge/agent-wiki",
+  "rooty_wiki_home": "~/knowledge/rooty-wiki",
+  "rooty_hermes_home": "",
+  "install_dir": "~/.local/share/rooty-wiki-kit/3.0.1-conf.3",
+  "command_dir": "~/.local/share/rooty-wiki-kit/3.0.1-conf.3/bin",
+  "codex_skills_dir": "~/.agents/skills",
+  "install_rooty": true,
+  "install_codex": false,
+  "terminal_backend": "local"
+}

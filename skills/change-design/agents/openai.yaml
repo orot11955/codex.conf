@@ -1,0 +1,8 @@
+interface:
+  display_name: "변경 설계"
+  short_description: "change-design · 작업 조건에 맞는 범위만 적용"
+  default_prompt: "$change-design을 사용해 이 변경의 경계, 계약, 배포 계획을 설계해 주세요."
+
+# 기존 Astra 이후의 얇은 지침을 유지한다. 전체 절차는 명시 요청 때만 사용한다.
+policy:
+  allow_implicit_invocation: true

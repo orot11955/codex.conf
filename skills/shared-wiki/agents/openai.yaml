@@ -1,0 +1,6 @@
+interface:
+  display_name: "Shared Wiki"
+  short_description: "고정 SHA의 개발 지식 조회와 main 전용 후보 기록"
+  default_prompt: "$shared-wiki 현재 작업에 필요한 검증된 근거만 좁게 조회하고 문서 ID·SHA·적용 조건을 알려줘. 새 실제 발견이 없으면 후보를 쓰지 마."
+policy:
+  allow_implicit_invocation: true

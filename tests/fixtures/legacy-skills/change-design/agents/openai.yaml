@@ -1,0 +1,4 @@
+interface:
+  display_name: "변경 설계"
+  short_description: "경계·API·마이그레이션을 포함한 안전한 변경을 설계합니다."
+  default_prompt: "$change-design을 사용해 이 변경의 경계, 계약, 배포 계획을 설계해 주세요."

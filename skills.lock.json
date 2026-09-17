@@ -1,0 +1,201 @@
+{
+  "format_version": 1,
+  "skills": {
+    "task-orchestration": {
+      "source": "archive:codex.file.zip/codex.file/codex/skills/task-orchestration",
+      "source_archive_sha256": "3eed78f9fe535da0202e78a441dc2faf96c6e1de2d5e46a298e3a9c59c17f000",
+      "source_tree_sha256": "151312170035d5c6688bef65b880c31f06f20dd5061a806959b289c4ba3e65d9",
+      "managed_tree_sha256": "da87f7a8f1231ef56526acb77da693a8b7bd1269571d45219c016367123eefe1",
+      "revision": "2026.09.17-unified.2"
+    },
+    "codebase-exploration": {
+      "source": "archive:codex.file.zip/codex.file/codex/skills/codebase-exploration",
+      "source_archive_sha256": "3eed78f9fe535da0202e78a441dc2faf96c6e1de2d5e46a298e3a9c59c17f000",
+      "source_tree_sha256": "ca908c06334e25fe961f8e78d7ae5112516fffcba7febf7c67a3f5331647061f",
+      "managed_tree_sha256": "d050994377143e95bf6ac7ceeb115b916c420e2e1c8f97118eef18d81e38bd8a",
+      "revision": "2026.09.17-unified.2"
+    },
+    "change-design": {
+      "source": "archive:codex.file.zip/codex.file/codex/skills/change-design",
+      "source_archive_sha256": "3eed78f9fe535da0202e78a441dc2faf96c6e1de2d5e46a298e3a9c59c17f000",
+      "source_tree_sha256": "17605eab3fe682172461f6df6c901b5734e4275b1d342d548adba4a8021c6286",
+      "managed_tree_sha256": "cd6f382f3fab8a4f49504e32f43ef16d0d43336439ad0a8a3a8d7ee3467a5077",
+      "revision": "2026.09.17-unified.2"
+    },
+    "implementation-loop": {
+      "source": "archive:codex.file.zip/codex.file/codex/skills/implementation-loop",
+      "source_archive_sha256": "3eed78f9fe535da0202e78a441dc2faf96c6e1de2d5e46a298e3a9c59c17f000",
+      "source_tree_sha256": "074750a8584ee7f8107177960f98ede2e7c82cfbe20b19b067a01a38d0f0ce4a",
+      "managed_tree_sha256": "d057fda96a68b88b1118d491377412e08af287713b6cdc0bb0f4a102ffd7cbb4",
+      "revision": "2026.09.17-unified.2"
+    },
+    "change-verification": {
+      "source": "archive:codex.file.zip/codex.file/codex/skills/change-verification",
+      "source_archive_sha256": "3eed78f9fe535da0202e78a441dc2faf96c6e1de2d5e46a298e3a9c59c17f000",
+      "source_tree_sha256": "7dd3c2c2868beb40e86e2d11dcf1b32d6e4c4aee8f3a6ac8a34a9d99287fe837",
+      "managed_tree_sha256": "130ba5326d71fb422d72bf356442e033ddc769997513ff716364e4dde24f5538",
+      "revision": "2026.09.17-unified.2"
+    },
+    "change-review": {
+      "source": "archive:codex.file.zip/codex.file/codex/skills/change-review",
+      "source_archive_sha256": "3eed78f9fe535da0202e78a441dc2faf96c6e1de2d5e46a298e3a9c59c17f000",
+      "source_tree_sha256": "7f63eba52ad6b2768baf0bfedd63b611528c2f6bbcf19e3ea72e23c73965b4ff",
+      "managed_tree_sha256": "604d831c5f60b186bee41b70201464335817a1e10bc8adbcded7e4842d7210c2",
+      "revision": "2026.09.17-unified.2"
+    },
+    "security-review": {
+      "source": "archive:codex.file.zip/codex.file/codex/skills/security-review",
+      "source_archive_sha256": "3eed78f9fe535da0202e78a441dc2faf96c6e1de2d5e46a298e3a9c59c17f000",
+      "source_tree_sha256": "82afa30a52539798f9f9322c8e109b101ef95b9c05451542efd580910a109708",
+      "managed_tree_sha256": "60c4250a53bb6f25bb2ef6094b33849e840a918b1ddbffabcdada85ff9704490",
+      "revision": "2026.09.17-unified.2"
+    },
+    "frontend-design": {
+      "source_kind": "locally-authored-focused-adaptation",
+      "upstream_sources": [
+        {
+          "repository": "anthropics/skills",
+          "path": "skills/frontend-design/SKILL.md",
+          "git_blob_sha": "a5333457c414d20d625f307df945842c0952ecc3",
+          "git_blob_url": "https://api.github.com/repos/anthropics/skills/git/blobs/a5333457c414d20d625f307df945842c0952ecc3",
+          "commit": "34040c9c568585f6929bedeaad110ad08f079624"
+        }
+      ],
+      "revision": "2026.09.17-unified.2",
+      "managed_tree_sha256": "58e561154e1540fa430d0fcb5e109474b08e5ef80d94aba129e9ad1284068310"
+    },
+    "web-design-guidelines": {
+      "source_kind": "locally-authored-focused-adaptation",
+      "upstream_sources": [
+        {
+          "repository": "vercel-labs/agent-skills",
+          "path": "skills/web-design-guidelines/SKILL.md",
+          "git_blob_sha": "ceae92ab319216a68274168fba9b63b998b65997",
+          "git_blob_url": "https://api.github.com/repos/vercel-labs/agent-skills/git/blobs/ceae92ab319216a68274168fba9b63b998b65997",
+          "commit": "063bee94c3f4df8453406c830b0a7df0f2860278"
+        },
+        {
+          "repository": "vercel-labs/web-interface-guidelines",
+          "path": "command.md",
+          "git_blob_sha": "e1e8e3460db7c1440e34642c4f7b885185ca5366",
+          "git_blob_url": "https://api.github.com/repos/vercel-labs/web-interface-guidelines/git/blobs/e1e8e3460db7c1440e34642c4f7b885185ca5366"
+        }
+      ],
+      "revision": "2026.09.17-unified.2",
+      "managed_tree_sha256": "66791ee2caba2515337b6ff23b8c4fe023aeefcff66187f8e8f01f8f5ce1bf55"
+    },
+    "accessibility": {
+      "source_kind": "locally-authored-focused-adaptation",
+      "upstream_sources": [
+        {
+          "repository": "addyosmani/web-quality-skills",
+          "path": "skills/accessibility/SKILL.md",
+          "git_blob_sha": "22a244430f890fe44cbd7a50590d5cbf8528c77b",
+          "git_blob_url": "https://api.github.com/repos/addyosmani/web-quality-skills/git/blobs/22a244430f890fe44cbd7a50590d5cbf8528c77b"
+        }
+      ],
+      "revision": "2026.09.17-unified.2",
+      "managed_tree_sha256": "e024724b10b51108070ce3661b7d9889b4c7f97e4e1462e84a7ecdcb6e1e23ce"
+    },
+    "performance": {
+      "source_kind": "locally-authored-focused-adaptation",
+      "upstream_sources": [
+        {
+          "repository": "addyosmani/web-quality-skills",
+          "path": "skills/performance/SKILL.md",
+          "git_blob_sha": "913a36c6ad869d530053f20fd05698804cb24e3e",
+          "git_blob_url": "https://api.github.com/repos/addyosmani/web-quality-skills/git/blobs/913a36c6ad869d530053f20fd05698804cb24e3e"
+        }
+      ],
+      "revision": "2026.09.17-unified.2",
+      "managed_tree_sha256": "71a0c235546abe9a77d63606982d52a06d49692f122dccac21eceb45252e631a"
+    },
+    "vercel-react-best-practices": {
+      "source_kind": "locally-authored-focused-adaptation",
+      "upstream_sources": [
+        {
+          "repository": "vercel-labs/agent-skills",
+          "path": "skills/react-best-practices/SKILL.md",
+          "git_blob_sha": "237988de4a66dd8a71d30a2c24ebe1a86b58d04e",
+          "git_blob_url": "https://api.github.com/repos/vercel-labs/agent-skills/git/blobs/237988de4a66dd8a71d30a2c24ebe1a86b58d04e",
+          "commit": "063bee94c3f4df8453406c830b0a7df0f2860278"
+        }
+      ],
+      "revision": "2026.09.17-unified.2",
+      "managed_tree_sha256": "85aa6b0846ec506f1ac9e2a2b800c2a7c810780914fd60adab15c6f420409e99"
+    },
+    "vercel-composition-patterns": {
+      "source_kind": "locally-authored-focused-adaptation",
+      "upstream_sources": [
+        {
+          "repository": "vercel-labs/agent-skills",
+          "path": "skills/composition-patterns/SKILL.md",
+          "git_blob_sha": "d07025bf943345bc1cf15eb923594f889ff881f0",
+          "git_blob_url": "https://api.github.com/repos/vercel-labs/agent-skills/git/blobs/d07025bf943345bc1cf15eb923594f889ff881f0",
+          "commit": "063bee94c3f4df8453406c830b0a7df0f2860278"
+        }
+      ],
+      "revision": "2026.09.17-unified.2",
+      "managed_tree_sha256": "4755c640541cdd8aade05778ede7683a806688810445a4bbb1952c4dafb19dc9"
+    },
+    "nestjs-best-practices": {
+      "source_kind": "locally-authored-focused-adaptation",
+      "upstream_sources": [
+        {
+          "repository": "Kadajett/agent-nestjs-skills",
+          "path": "skills/nestjs-best-practices/SKILL.md",
+          "git_blob_sha": "c3a83abfca385da07a0a99ee17ce8cee0a7f2cbe",
+          "git_blob_url": "https://api.github.com/repos/Kadajett/agent-nestjs-skills/git/blobs/c3a83abfca385da07a0a99ee17ce8cee0a7f2cbe"
+        }
+      ],
+      "revision": "2026.09.17-unified.2",
+      "managed_tree_sha256": "f1b87c63479bc9eea68d1b747d566af33cf9b1cb5172189a9015236989c0d01c"
+    },
+    "java-springboot": {
+      "source_kind": "locally-authored-focused-adaptation",
+      "upstream_sources": [
+        {
+          "repository": "github/awesome-copilot",
+          "path": "skills/java-springboot/SKILL.md",
+          "git_blob_sha": "39ae2e5f13de608cfac6e4fb15bb7842bd413215",
+          "git_blob_url": "https://api.github.com/repos/github/awesome-copilot/git/blobs/39ae2e5f13de608cfac6e4fb15bb7842bd413215"
+        }
+      ],
+      "revision": "2026.09.17-unified.2",
+      "managed_tree_sha256": "8f0185d5f06e4455130960d9269381d271de5f799a9488ecc61e5878f387b045"
+    },
+    "systematic-debugging": {
+      "source_kind": "locally-authored-focused-adaptation",
+      "upstream_sources": [
+        {
+          "repository": "obra/superpowers",
+          "path": "skills/systematic-debugging/SKILL.md",
+          "git_blob_sha": "095d194ac041502905f15b01d22d294fb94db8b2",
+          "git_blob_url": "https://api.github.com/repos/obra/superpowers/git/blobs/095d194ac041502905f15b01d22d294fb94db8b2"
+        }
+      ],
+      "revision": "2026.09.17-unified.2",
+      "managed_tree_sha256": "3823bab075ccb1ad99f3b9651a4c2596cb0ec03081508b201ce542a876fa757a"
+    },
+    "playwright-cli": {
+      "source_kind": "locally-authored-focused-adaptation",
+      "upstream_sources": [
+        {
+          "repository": "microsoft/playwright-cli",
+          "path": "skills/playwright-cli/SKILL.md",
+          "git_blob_sha": "b67c94028834b7ec8b4bff1feda9d950dfbf4874",
+          "git_blob_url": "https://api.github.com/repos/microsoft/playwright-cli/git/blobs/b67c94028834b7ec8b4bff1feda9d950dfbf4874"
+        }
+      ],
+      "revision": "2026.09.17-unified.2",
+      "managed_tree_sha256": "094840111b6551a42ca9847dae60f5053a339916df91a5f333a6a01300e9ff2f"
+    },
+    "shared-wiki": {
+      "source_kind": "user-supplied-wiki-kit-adaptation",
+      "source": "archive:rooty-wiki-setup-v3.zip/rooty-wiki-setup",
+      "source_archive_sha256": "c7dbaf77fd9af5232d845daecd03a8c740f7734b40f00498a26ee808d722c8ff",
+      "revision": "2026.09.17-unified.3",
+      "managed_tree_sha256": "3d11788ffd29c5263d09742e9f54d22b4c8e422732533ca0ac939240631ec624"
+    }
+  }
+}

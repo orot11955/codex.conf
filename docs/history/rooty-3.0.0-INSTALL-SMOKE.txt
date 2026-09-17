@@ -1,0 +1,70 @@
+Managed venv installation smoke test. Temporary fake profiles only; no real Hermes/Gitea/model call.
+
+COMMAND: setup.py plan
+exit=0
+{
+  "version": "3.0.0",
+  "changes": [
+    {
+      "path": "<TEMP>/kit/review_runner.py",
+      "action": "add"
+    },
+    {
+      "path": "<TEMP>/kit/rooty_wiki.py",
+      "action": "add"
+    },
+    {
+      "path": "<TEMP>/kit/wiki.py",
+      "action": "add"
+    },
+    {
+      "path": "<TEMP>/kit/requirements.txt",
+      "action": "add"
+    },
+    {
+      "path": "<TEMP>/bin/wiki-v3",
+      "action": "add"
+    },
+    {
+      "path": "<TEMP>/bin/rooty-wiki",
+      "action": "add"
+    },
+    {
+      "path": "<TEMP>/bin/rooty-wiki-admin",
+      "action": "add"
+    },
+    {
+      "path": "<TEMP>/existing-hermes/skills/shared-wiki/SKILL.md",
+      "action": "add"
+    },
+    {
+      "path": "<TEMP>/existing-hermes/skills/shared-wiki/templates/knowledge.md",
+      "action": "add"
+    },
+    {
+      "path": "<TEMP>/codex-skills/shared-wiki/SKILL.md",
+      "action": "add"
+    }
+  ],
+  "unchanged_native_files": [
+    "Rooty config.yaml/.env/SOUL.md/memories/sessions/auth",
+    "Codex AGENTS/config.toml/auth",
+    "existing wiki and rooty commands"
+  ],
+  "no_services_or_cron_installed": true,
+  "no_git_push_or_model_calls": true
+}
+
+
+
+COMMAND: setup.py apply
+exit=1
+
+WARNING: The directory '/home/oai/.cache/pip' or its parent directory is not owned or is not writable by the current user. The cache has been disabled. Check the permissions and owner of that directory. If executing pip with sudo, you should use sudo's -H flag.
+ERROR: Could not find a version that satisfies the requirement PyYAML==6.0.3 (from versions: none)
+ERROR: No matching distribution found for PyYAML==6.0.3
+ERROR: Command '['<TEMP>/kit/.venv/bin/python', '-m', 'pip', 'install', '-r', '/mnt/data/rooty-wiki-setup/requirements.txt']' returned non-zero exit status 1.
+
+RESULT: NOT PASSED
+Reason: RuntimeError('setup.py apply failed')
+Elapsed seconds: 3.485

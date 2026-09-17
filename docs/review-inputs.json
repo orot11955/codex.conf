@@ -1,0 +1,29 @@
+{
+  "review_date": "2026-09-17",
+  "package_version": "2026.09.17-unified.2",
+  "inputs": [
+    {
+      "name": "codex.conf-unified-2026-09-16.zip",
+      "bytes": 87547,
+      "sha256": "765ca20457ab52ad272e5bc4841082c3bd0ebf1a68d9bcae7947282f08cd4945"
+    },
+    {
+      "name": "codex.conf.zip",
+      "bytes": 121913,
+      "sha256": "20c439d2567f66408645e5590c0601f3f8f64185810a46127c1a22c360b337e3"
+    },
+    {
+      "name": "codex.file.zip",
+      "bytes": 205956,
+      "sha256": "3eed78f9fe535da0202e78a441dc2faf96c6e1de2d5e46a298e3a9c59c17f000"
+    }
+  ],
+  "upstream_metadata": "skills.lock.json: upstream_sources (Git blob IDs; commit IDs only where actually retrieved)",
+  "runtime": {
+    "python": "3.13.5",
+    "os": "Linux",
+    "codex_binary": null,
+    "playwright_cli_binary": null
+  },
+  "writes": "Only /mnt/data package source and isolated temporary test homes; no user machine or remote Git mutation"
+}

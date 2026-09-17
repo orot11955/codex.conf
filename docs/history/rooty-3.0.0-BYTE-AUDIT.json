@@ -1,0 +1,24 @@
+{
+  "files": [
+    {
+      "file": "integration/codex/AGENTS.fragment.md",
+      "bytes": 874,
+      "characters": 404,
+      "sha256": "40343e67efd03bbc78d1107978da0b5b85f16be583c9347ff198c873801201ab"
+    },
+    {
+      "file": "integration/codex/shared-wiki/SKILL.md",
+      "bytes": 1952,
+      "characters": 1028,
+      "sha256": "5f025b5fb053299f13dabfbe68372b9603f4dd7959fd10a2db7a2b7dfc784e8a"
+    },
+    {
+      "file": "integration/hermes/shared-wiki/SKILL.md",
+      "bytes": 3233,
+      "characters": 1739,
+      "sha256": "12909ce312ed0318dae6ddc5af8f4ff3580764ab2c47d60be5b79810b2ea38a0"
+    }
+  ],
+  "encoding": null,
+  "note": "Text only. Characters/bytes are not tokens; reference encoding is not a model billing guarantee."
+}

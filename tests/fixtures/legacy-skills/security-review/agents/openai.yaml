@@ -1,0 +1,4 @@
+interface:
+  display_name: "보안 검토"
+  short_description: "위협 모델과 신뢰 경계를 중심으로 보안을 검토합니다."
+  default_prompt: "$security-review를 사용해 조건부 보안 검토 게이트 대상 변경을 읽기 전용으로 검토하고, 판정을 `통과`, `조건부 통과`, `재작업 필요` 중 하나로 반환해 주세요."

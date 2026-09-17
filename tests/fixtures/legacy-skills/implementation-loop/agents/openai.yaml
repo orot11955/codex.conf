@@ -1,0 +1,4 @@
+interface:
+  display_name: "구현 절차"
+  short_description: "소유 파일 범위에서 최소 변경과 검증을 수행합니다."
+  default_prompt: "$implementation-loop를 사용해 이 소유 작업을 최소 변경으로 구현하고 검증해 주세요."
