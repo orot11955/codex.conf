@@ -1,10 +1,10 @@
 # 공통 원본. 각 기기의 config.toml은 agentctl이 생성한다.
-# 첨부 codex.conf의 실제 설정을 우선한다(옛 설명서의 Sol/high와 다름).
-# max는 원본 보존값: 설치된 CLI에서 지원하는지 반드시 확인한다.
-model = "gpt-5.6-luna"
-model_reasoning_effort = "max"
+# main은 설계·통합을 맡고 Luna에 범위가 명확한 작업을 위임한다.
+# 하위 역할의 max 추론 지원 여부는 실제 설치된 CLI에서 확인한다.
+model = "gpt-5.6-sol"
+model_reasoning_effort = "high"
 approvals_reviewer = "auto_review"
-service_tier = "fast"
+service_tier = "default"
 
 # 기존 codex.file의 명시적 샌드박스 기본값만 가져온다.
 # auto_review는 사용자의 업무 승인/운영 배포 승인을 대신하지 않는다.
@@ -14,6 +14,6 @@ sandbox_mode = "workspace-write"
 [agents]
 enabled = true
 max_concurrent_threads_per_session = 3
-default_subagent_model = "gpt-5.6-terra"
-default_subagent_reasoning_effort = "low"
+default_subagent_model = "gpt-5.6-luna"
+default_subagent_reasoning_effort = "max"
 interrupt_message = true

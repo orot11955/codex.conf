@@ -6,7 +6,7 @@ ROOT=Path(__file__).resolve().parents[1]
 class WikiUpgradeTests(unittest.TestCase):
     def setUp(self):
         self.tmp=tempfile.TemporaryDirectory(prefix='wiki-upgrade-');self.addCleanup(self.tmp.cleanup)
-        self.base=Path(self.tmp.name);self.home=self.base/'user';self.home.mkdir()
+        self.base=Path(self.tmp.name).resolve();self.home=self.base/'user';self.home.mkdir()
         self.code=self.home/'.codex';self.skills=self.home/'.agents/skills'
         self.env={k:v for k,v in os.environ.items() if not k.startswith('CODEX_WIKI_') and k!='CODEX_HOME'}
         self.env.update(HOME=str(self.home),PYTHONDONTWRITEBYTECODE='1')

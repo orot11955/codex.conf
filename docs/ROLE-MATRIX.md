@@ -1,22 +1,23 @@
 # 역할별 실제 설정
 
-생성 기준: 배포 소스 TOML, 2026-09-17. 실행 시 `agentctl doctor`로 설치된 값을 다시 확인한다.
+생성 기준: 배포 소스 TOML, 2026-09-19. 실행 시 `agentctl doctor`로 설치된 값을 다시 확인한다.
 
 | 역할 | 모델 | 추론 | 기본 파일 접근 |
 |---|---|---|---|
-| main | `gpt-5.6-luna` | `max` | `workspace-write` |
-| architect | `gpt-6-astra` | `medium` | `read-only` |
-| security | `gpt-6-astra` | `low` | `read-only` |
-| scout | `gpt-5.6-luna` | `low` | `read-only` |
-| executor | `gpt-5.6-luna` | `low` | `inherit: workspace-write` |
-| backend | `gpt-5.6-terra` | `low` | `inherit: workspace-write` |
-| frontend | `gpt-5.6-terra` | `low` | `inherit: workspace-write` |
-| test | `gpt-5.6-terra` | `low` | `inherit: workspace-write` |
-| critic | `gpt-5.6-terra` | `medium` | `read-only` |
+| main | `gpt-5.6-sol` | `high` | `workspace-write` |
+| backend | `gpt-5.6-luna` | `max` | `inherit: workspace-write` |
+| critic | `gpt-5.6-luna` | `max` | `read-only` |
+| deep-reviewer | `gpt-6-astra` | `high` | `read-only` |
+| escalation | `gpt-5.6-sol` | `high` | `inherit: workspace-write` |
+| executor | `gpt-5.6-luna` | `max` | `inherit: workspace-write` |
+| frontend | `gpt-5.6-luna` | `max` | `inherit: workspace-write` |
+| scout | `gpt-5.6-luna` | `high` | `read-only` |
+| security | `gpt-6-astra` | `high` | `read-only` |
+| test | `gpt-5.6-luna` | `max` | `inherit: workspace-write` |
 
-main은 하위 최대 3개, 기본 지침은 보통 1~2개다. 하위 8개 역할은 모두 agents.enabled=false로 생성한다. test의 테스트 파일 편집 제한 및 역할 범위는 지침과 소유권 계약이며 별도 파일별 OS 접근 제어를 구현한 것은 아니다.
+main은 하위 최대 3개, 기본 지침은 보통 1~2개다. 하위 9개 역할은 모두 agents.enabled=false로 생성한다. test의 테스트 파일 편집 제한 및 역할 범위는 지침과 소유권 계약이며 별도 파일별 OS 접근 제어를 구현한 것은 아니다.
 
-선택 프로필 `conf-sol-high`만 main을 Sol/high로 바꾼다. 기본 모델이나 하위 역할은 자동으로 바꾸지 않는다. max 및 모델 접근 권한은 [호환성 문서](COMPATIBILITY.md)를 확인한다.
+기본 main은 Sol/high, 처리 등급은 default다. `conf-sol-high`는 기존 이름 호환용이고, `conf-astra-low`는 main만 Astra/low로 바꾸는 명시적 비교 프로필이다. 하위 역할은 동일하다. [선택 근거](MODEL-SELECTION.md)를 참고한다. max 및 모델 접근 권한은 [호환성 문서](COMPATIBILITY.md)를 확인한다.
 
 ## 스킬 연결
 
@@ -26,7 +27,8 @@ main은 하위 최대 3개, 기본 지침은 보통 1~2개다. 하위 8개 역�
 |---|---:|---|
 | main | 17 | 작은 작업 직접 수행, 필요한 도메인 스킬 선택 |
 | scout | 2 | 탐색·원인 근거만 |
-| architect | 6 | 설계만; UI 설계도 구현/브라우저 실행 없음 |
+| deep-reviewer | 6 | main이 해결 못한 쟁점 검토만; 구현/브라우저 실행 없음 |
+| escalation | 5 | Luna 재시도 후 남은 국소 문제의 진단·수정·검증 |
 | backend | 5 | NestJS 또는 Spring Boot를 실제 프로젝트로 선택 |
 | frontend | 10 | 디자인·React·UI 검수·조건부 browser/performance |
 | executor | 3 | 정해진 작은 구현·명령 검증 |

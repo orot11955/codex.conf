@@ -1,6 +1,6 @@
 format_version = 1
 package_name = "codex.conf"
-package_version = "2026.09.17-unified.3"
+package_version = "2026.09.19-agent.1"
 # 실제 기기에서 확인한 Codex 버전 문자열을 채우면 doctor/CLI 검사에서 비교한다.
 # 검증하지 않은 버전 번호를 임의로 고정하지 않는다.
 expected_codex_version = ""

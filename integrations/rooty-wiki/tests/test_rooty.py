@@ -168,7 +168,7 @@ class RootyTests(unittest.TestCase):
 
 class InstallerTests(unittest.TestCase):
     def setUp(self):
-        self.tmp=tempfile.TemporaryDirectory();self.base=Path(self.tmp.name)/'path with spaces';self.base.mkdir()
+        self.tmp=tempfile.TemporaryDirectory();self.base=Path(self.tmp.name).resolve()/'path with spaces';self.base.mkdir()
         self.hermes=self.base/'real-rooty';self.hermes.mkdir()
         for n in ['config.yaml','.env','SOUL.md','auth.json','memories/MEMORY.md','sessions/private.json']:
             p=self.hermes/n;p.parent.mkdir(parents=True,exist_ok=True);p.write_text('sentinel:'+n)

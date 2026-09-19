@@ -29,14 +29,14 @@ rules = [
   { skill = "systematic-debugging", when = "버그 조사 배정 시 근거·실패 경로만" },
 ]
 
-[roles.architect]
+[roles.deep-reviewer]
 rules = [
-  { skill = "change-design", when = "계층 간 계약·대안·변경 순서 설계 시" },
-  { skill = "vercel-composition-patterns", when = "React 공용 컴포넌트 API 설계 시" },
-  { skill = "vercel-react-best-practices", when = "React/Next 서버·클라이언트 경계 설계 시" },
-  { skill = "nestjs-best-practices", when = "NestJS 모듈·DI·서비스 계약 설계 시" },
-  { skill = "java-springboot", when = "Spring Boot 서비스·DB 계약 설계 시" },
-  { skill = "frontend-design", when = "UI 구조·디자인 토큰 설계가 배정됐을 때만; 구현 금지" },
+  { skill = "change-design", when = "main이 해결하지 못한 계층 간 계약·대안·변경 순서 쟁점을 읽기 전용으로 검토할 때" },
+  { skill = "vercel-composition-patterns", when = "main이 해결하지 못한 React 공용 컴포넌트 API 설계 쟁점을 검토할 때" },
+  { skill = "vercel-react-best-practices", when = "main이 해결하지 못한 React/Next 서버·클라이언트 경계 쟁점을 검토할 때" },
+  { skill = "nestjs-best-practices", when = "main이 해결하지 못한 NestJS 모듈·DI·서비스 계약 쟁점을 검토할 때" },
+  { skill = "java-springboot", when = "main이 해결하지 못한 Spring Boot 서비스·DB 계약 쟁점을 검토할 때" },
+  { skill = "frontend-design", when = "main이 해결하지 못한 UI 구조·디자인 토큰 쟁점을 검토할 때만; 구현 금지" },
 ]
 
 [roles.backend]
@@ -67,6 +67,15 @@ rules = [
   { skill = "implementation-loop", when = "배정된 구현 절차의 실행 시" },
   { skill = "systematic-debugging", when = "명령 실패 원인을 좁힐 때; 새 설계는 main에 반환" },
   { skill = "change-verification", when = "정해진 명령의 결과를 검증할 때" },
+]
+
+[roles.escalation]
+rules = [
+  { skill = "implementation-loop", when = "근거가 확보된 국소 구현·수정 시" },
+  { skill = "nestjs-best-practices", when = "실제 NestJS 국소 코드 변경 시" },
+  { skill = "java-springboot", when = "실제 Spring Boot 국소 코드 변경 시" },
+  { skill = "systematic-debugging", when = "반복 실패의 국소 원인을 좁힐 때; 새 설계는 main에 반환" },
+  { skill = "change-verification", when = "국소 수정 결과를 검증할 때" },
 ]
 
 [roles.critic]

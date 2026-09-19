@@ -1,10 +1,10 @@
 # 호환성 및 공식 근거
 
-문서 확인일: 2026-09-17. 원본 운영값의 보존과 공개 문서상 지원 확인은 별개다. 아래 내용은 작성 시점 기준이며 설치한 CLI와 계정에서 다시 검증해야 한다.
+문서 확인일: 2026-09-19. 원본 운영값의 보존과 공개 문서상 지원 확인은 별개다. 아래 내용은 작성 시점 기준이며 설치한 CLI와 계정에서 다시 검증해야 한다.
 
-## 1. 메인 Luna/max
+## 1. 메인 Sol/high와 역할별 추론
 
-첨부 원본의 실제 기본값을 보존했다. 공개 설정 참조의 `model_reasoning_effort`는 minimal/low/medium/high/xhigh를 열거하고 max를 열거하지 않는다. 따라서 내장 verify가 max를 허용하는 것은 **이번 원본의 의도적인 예외**이지 Codex 지원 확인이 아니다.
+main은 비용 우선 비교에 따라 Sol/high를 사용하고, 하위 역할의 기존 추론 설정은 유지한다. Sol 모델 문서는 high를 지원한다. 모델 API의 지원 수준과 설치된 Codex CLI 파서·계정 권한은 별개이므로 실제 CLI에서 로딩을 확인한다. [모델 선택 기록](MODEL-SELECTION.md)에 비용 근거와 한계를 남겼다.
 
 ```bash
 codex --version
@@ -13,7 +13,7 @@ codex --version
 
 CLI 로딩 검사는 임시 CODEX_HOME과 프로젝트 밖의 임시 작업 디렉터리에서 `codex -c check_for_update_on_startup=false features list`를 실행한다. `codex exec`나 대화 요청을 하지 않는다. 출력에 비밀정보가 섞일 수 있어 CLI 실패 시 stderr 전체를 인쇄하지 않는다. 로딩 성공도 계정 모델 접근, 해당 추론 지원, agent 도구 집행을 입증하지 않는다.
 
-검사 실패 또는 Codex 실행 파일 부재 시 요청한 검사를 성공 처리하지 않고 중단한다. 기존 배포 대상은 바뀌지 않는다. 미검증을 감수하는 명시적 --skip-cli-check만 예외다. 해당 런타임에서 max 지원을 확인하거나, 사용자가 승인한 지원값으로 공통 원본을 변경한 다음 재검사한다. xhigh로의 자동 대체나 Sol로의 자동 전환은 없다. 선택 프로필이 있다고 해서 기본 config의 잘못된 값을 무조건 우회할 수 있는 것도 아니다.
+검사 실패 또는 Codex 실행 파일 부재 시 요청한 검사를 성공 처리하지 않고 중단한다. 기존 배포 대상은 바뀌지 않는다. 미검증을 감수하는 명시적 `--skip-cli-check`만 예외다. 해당 런타임에서 역할별 추론 수준과 모델 접근을 확인하거나 사용자가 승인한 지원값으로 공통 원본을 변경한 다음 재검사한다. 자동 모델·추론 대체는 없으며, 선택 프로필도 잘못된 기본 설정을 자동으로 우회하지 않는다.
 
 공식 근거: https://learn.chatgpt.com/docs/config-file/config-reference
 
@@ -41,13 +41,13 @@ v2는 task-orchestration만 `allow_implicit_invocation=false`로 유지하고 �
 
 ## 4. 프로필
 
-현재 공식 문서는 `$CODEX_HOME/profile-name.config.toml` 파일과 `--profile profile-name` 선택을 안내한다. 이 패키지는 `conf-sol-high.config.toml`을 완전한 생성 설정으로 설치한다.
+현재 공식 문서는 `$CODEX_HOME/profile-name.config.toml` 파일과 `--profile profile-name` 선택을 안내한다. 이 패키지는 `conf-sol-high.config.toml`과 `conf-astra-low.config.toml`을 완전한 생성 설정으로 설치한다.
 
 ```bash
-codex --profile conf-sol-high
+codex --profile conf-astra-low
 ```
 
-명시적으로 선택한 세션에서만 메인을 Sol/high로 바꾼다. 기본값은 Luna/max이며, 하위 역할과 보안 정책은 동일하다. 예전 `[profiles.*]` 구조를 새 기본 config에 자동으로 혼합하지 않는다.
+명시적으로 선택한 세션에서만 메인을 Astra/low로 바꾼다. 기본값은 Sol/high이며, 기존 conf-sol-high 이름은 호환용으로 유지한다. 하위 역할과 보안 정책은 동일하다. 예전 `[profiles.*]` 구조를 새 기본 config에 자동으로 혼합하지 않는다.
 
 공식 근거: https://learn.chatgpt.com/docs/config-file/config-reference
 
@@ -55,4 +55,4 @@ codex --profile conf-sol-high
 
 같은 payload SHA와 CLI 버전은 공통 기본값의 재현성을 높인다. 하지만 기기별 provider/MCP/신뢰 프로젝트/인증, 프로젝트 지침·프로젝트 설정, 명시적 CLI 모델·프로필 선택, 기존 세션 상태, 계정 모델 권한은 다를 수 있다. 이 패키지는 그런 차이까지 감춘 채 모든 응답이 동일하다고 보장하지 않는다.
 
-`expected_codex_version`은 실제 확인한 전체 버전 문자열로만 채운다. 패키지 작성 환경에는 Codex 바이너리가 없으므로 실제 실행 호환 버전은 미고정이다. 회귀 테스트의 CLI는 성공·실패 분기를 확인하는 명시적 가짜 실행 파일이다.
+`expected_codex_version`은 실제 확인한 전체 버전 문자열로만 채운다. CLI 로딩 검증 결과는 최신 검증 기록에 별도로 남기며, 특정 CLI 버전으로 공통 원본을 자동 고정하지 않는다. 회귀 테스트의 CLI는 성공·실패 분기를 확인하는 명시적 가짜 실행 파일이다.

@@ -1,6 +1,6 @@
 # Obsidian Shared Wiki 통합 운영
 
-배포: **2026.09.17-unified.3** · 위키 코어: **3.0.1-conf.3**
+배포: **2026.09.19-agent.1** · 위키 코어: **3.0.1-conf.3**
 
 기존 Codex 모델/역할/승인/샌드박스, 17개 스킬은 유지한다. 새 `shared-wiki`를 추가해 총 18개다. main만 필요할 때 위키를 조회·기록하며 하위는 발췌·문서 ID·SHA·적용 조건을 전달받는다. 원본은 사용자가 제공한 `rooty-wiki-setup-v3.zip`이고, 코드와 통합 변경은 WIKI-REVIEW.md에 기록한다.
 
@@ -131,7 +131,7 @@ main의 shared-wiki 스킬은 필요할 때만 다음을 수행한다.
 
 search는 metadata 기반 상위 3건부터 확인한다. 0건을 부재로 단정하지 않는다. 공통 자료가 필요할 때만 search/read의 `--include-global`을 쓴다. read는 기본 80줄의 창이고 필요한 절·추가 구간만 읽는다. 검증된 문서도 현재 버전·적용 조건·review_after를 다시 확인한다.
 
-scout/architect/backend/frontend/executor/critic/security/test는 shared-wiki를 직접 호출하지 않는다. main이 문서 ID·SHA·조건·필요 발췌를 전달하고, 하위는 부족한 근거를 요청한다. 다른 전문 스킬의 역할 배정은 유지한다. 이는 최소 중복 조회를 위한 workflow이고 동일 OS 계정의 파일 접근 보안 경계가 아니다.
+scout/deep-reviewer/escalation/backend/frontend/executor/critic/security/test는 shared-wiki를 직접 호출하지 않는다. main이 문서 ID·SHA·조건·필요 발췌를 전달하고, 하위는 부족한 근거를 요청한다. 다른 전문 스킬의 역할 배정은 유지한다. 이는 최소 중복 조회를 위한 workflow이고 동일 OS 계정의 파일 접근 보안 경계가 아니다.
 
 새 재사용 지식이 실제로 확인됐을 때만 main이 스킬의 templates/knowledge.md를 참고해 `candidate --from -`로 기록한다. 자기 작업의 project만 허용되고 도구가 wiki_revision을 기록한다. 실행하지 않은 테스트·미승인 결론·개인정보를 넣지 않는다. 개인정보 검출을 자동으로 보장하는 도구는 아니다.
 

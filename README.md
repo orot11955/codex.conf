@@ -1,6 +1,6 @@
 # codex.conf — 통합 설정 패키지
 
-`codex.conf`의 현재 모델·역할·최소 위임 정책을 기준으로, 옛 `codex.file`의 사용자 스킬·백업·복구·검증 장점을 합친 단일 소스입니다. 배포 버전: **2026.09.17-unified.3**.
+`codex.conf`의 현재 모델·역할·최소 위임 정책을 기준으로, 옛 `codex.file`의 사용자 스킬·백업·복구·검증 장점을 합친 단일 소스입니다. 배포 버전: **2026.09.19-agent.1**.
 
 **이번 판은 v2의 17개 스킬·역할 배정을 유지하고, 첨부 Rooty Wiki v3를 통합한 `shared-wiki`를 더해 총 18개를 제공합니다.** 기존 웹 개발·디자인 10개는 공개 원문을 검토해 자체 작성한 집중 적용본이며, 새 위키 스킬은 사용자 제공 패키지의 코드를 통합·보완한 적용본입니다.
 
@@ -20,9 +20,11 @@
 
 ## 먼저 확인할 사항
 
-**메인은 첨부 `codex.conf/config.toml`의 실제 값인 `gpt-5.6-luna / max`입니다.** 옛 README의 Sol/high를 기본값으로 되돌리지 않았습니다. 역할별 모델과 추론은 `config.toml`, `agents/*.toml`이 기준이며 [역할표](docs/ROLE-MATRIX.md)를 함께 제공합니다.
+**메인은 `gpt-5.6-sol / high`, 기본 하위 에이전트는 `gpt-5.6-luna / max`입니다.** main이 일반 설계와 통합을 맡고, 어려운 국소 문제는 escalation 또는 deep-reviewer의 호출 조건에 따라 이관합니다. 역할별 모델과 추론은 `config.toml`, `agents/*.toml`이 기준이며 [역할표](docs/ROLE-MATRIX.md)를 함께 제공합니다.
 
-**`max` 호환성은 별도 확인이 필요합니다.** 2026-09-16에 확인한 공식 참조는 `minimal / low / medium / high / xhigh`를 열거합니다. 이 패키지는 기존 운영값을 보존하지만 `max`의 공개 문서상 지원을 보증하지 않습니다. 설치된 CLI로 `plan --cli`를 실행하세요. CLI가 설정을 거부하면 적용하지 않으며 모델·추론을 자동으로 낮추지 않습니다. 실제 계정의 모델 접근·추론 지원은 새 세션에서 별도로 확인해야 합니다. 상세 내용은 [호환성](docs/COMPATIBILITY.md)에 있습니다.
+**모델·추론의 실행 호환성은 별도 확인이 필요합니다.** 모델별 지원과 설치된 CLI의 설정 파서, 계정 접근 권한은 서로 다릅니다. 설치된 CLI로 `plan --cli`를 실행하세요. CLI가 설정을 거부하면 적용하지 않으며 모델·추론을 자동으로 낮추지 않습니다. 실제 계정의 모델 접근·추론 지원은 새 세션에서 별도로 확인해야 합니다. 상세 내용은 [호환성](docs/COMPATIBILITY.md)에 있습니다.
+
+기본 처리 등급은 `default`이며 비용을 더 쓰는 Fast 모드를 기본으로 켜지 않습니다. Sol/high 선택의 단가·추론 토큰·재작업 비용 근거는 [모델 선택 기록](docs/MODEL-SELECTION.md)에 정리했습니다.
 
 ## 1. 첫 설치 — Mac / Ubuntu / Linux
 
@@ -69,8 +71,9 @@ $change-review 현재 diff의 회귀 위험만 검토해줘. 코드는 수정하
 $CODEX_HOME/                         기본값 ~/.codex
 ├── config.toml                     공통 + OS 차이 + 기기별 값
 ├── AGENTS.md                       공통 규칙 + 실제 로컬 경로 안내
-├── agents/                         현재 8개 역할, 다른 사용자 역할은 보존
-├── conf-sol-high.config.toml        명시적으로 선택할 때만 쓰는 대안
+├── agents/                         현재 9개 역할, 다른 사용자 역할은 보존
+├── conf-sol-high.config.toml        기존 선택 이름 호환; 현재 기본 main과 동일
+├── conf-astra-low.config.toml       명시적 Astra/low 비교 프로필
 ├── work-state/                     장기 작업 기록, Git 밖
 └── .codex-conf/                    기기별 배포 관리 영역
     ├── machine.toml                인증 방식·MCP·신뢰 프로젝트·UI 등 로컬 값

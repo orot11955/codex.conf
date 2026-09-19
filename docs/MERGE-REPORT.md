@@ -1,4 +1,4 @@
-> v1 통합 당시의 기록입니다. 현재 수정·검증 결과는 [2026-09-17 종합 검토](REVIEW-2026-09-17.md)를 우선합니다.
+> v1 통합 당시의 기록입니다. 현재 모델·역할과 검증 결과는 [역할표](ROLE-MATRIX.md), [모델 선택 기록](MODEL-SELECTION.md), [최신 검증 보고서](TEST-REPORT.md)를 우선합니다.
 
 # codex.conf 통합 판단 기록
 
@@ -34,7 +34,7 @@
 
 전역 지침에는 한국어 보고, 사실/추정과 실행/미실행 구분, 기존 사용자 변경 보존, 조사·리뷰 요청의 비수정 기본, 파괴적 외부 작업 승인, 비밀 보호, 검증을 약화해서 통과하지 않는 규칙, main만 Git 쓰기를 수행한다는 경계를 보완했다.
 
-`approval_policy=on-request`, `sandbox_mode=workspace-write`는 옛 패키지에서 가져온 명시적인 안전 기본값이다. 현재 `approvals_reviewer=auto_review`, `service_tier=fast`는 유지했다. 자동 검토자는 사용자 업무 승인이나 운영 배포 승인을 대신하지 않는다.
+`approval_policy=on-request`, `sandbox_mode=workspace-write`는 옛 패키지에서 가져온 명시적인 안전 기본값이다. 현재 `approvals_reviewer=auto_review`는 유지하고 비용 우선 정책에 따라 `service_tier=default`를 사용한다. 자동 검토자는 사용자 업무 승인이나 운영 배포 승인을 대신하지 않는다.
 
 ## 스킬 이식 판단
 

@@ -48,7 +48,7 @@ def snapshot(home, sha=SHA_A, project='personal/test'):
 class WikiSessionTests(unittest.TestCase):
     def setUp(self):
         self.temp=tempfile.TemporaryDirectory(prefix='conf-wiki-test-');self.addCleanup(self.temp.cleanup)
-        self.base=Path(self.temp.name);self.user=self.base/'user';self.user.mkdir()
+        self.base=Path(self.temp.name).resolve();self.user=self.base/'user';self.user.mkdir()
         self.code=self.user/'.codex';self.home=self.user/'knowledge/agent-wiki';self.project=self.user/'project';self.project.mkdir()
         self.bin=self.base/'bin';self.bin.mkdir()
         fake=self.bin/'codex';fake.write_text('#!/bin/sh\nexit 0\n');fake.chmod(0o755)

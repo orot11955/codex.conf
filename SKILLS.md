@@ -1,4 +1,4 @@
-# 스킬 운영표 — 2026.09.17-unified.3
+# 스킬 운영표 — 2026.09.19-agent.1
 
 설치되는 18개 스킬 중 10개는 공개 원문을 검토한 자체 작성 집중 적용본이다. 원본 전체 규칙집/실행 코드를 설치한 것으로 설명하지 않는다. 각 SOURCE.md와 skills.lock.json에 원문 객체와 로컬 내용의 식별자를 남겼다.
 
@@ -6,14 +6,14 @@
 
 | 스킬 | 참고 프로젝트 | 배정 역할(main은 직접 작업 가능) |
 |---|---|---|
-| `frontend-design` | `anthropics/skills` | architect, frontend |
+| `frontend-design` | `anthropics/skills` | deep-reviewer, frontend |
 | `web-design-guidelines` | `vercel-labs/agent-skills` | frontend, critic |
 | `accessibility` | `addyosmani/web-quality-skills` | frontend, critic, test |
 | `performance` | `addyosmani/web-quality-skills` | frontend, critic, test |
-| `vercel-react-best-practices` | `vercel-labs/agent-skills` | architect, frontend, critic, security |
-| `vercel-composition-patterns` | `vercel-labs/agent-skills` | architect, frontend, critic |
-| `nestjs-best-practices` | `Kadajett/agent-nestjs-skills` | architect, backend, critic, security, test |
-| `java-springboot` | `github/awesome-copilot` | architect, backend, critic, security, test |
+| `vercel-react-best-practices` | `vercel-labs/agent-skills` | deep-reviewer, frontend, critic, security |
+| `vercel-composition-patterns` | `vercel-labs/agent-skills` | deep-reviewer, frontend, critic |
+| `nestjs-best-practices` | `Kadajett/agent-nestjs-skills` | deep-reviewer, backend, critic, security, test |
+| `java-springboot` | `github/awesome-copilot` | deep-reviewer, backend, critic, security, test |
 | `systematic-debugging` | `obra/superpowers` | scout, backend, frontend, executor, test |
 | `playwright-cli` | `microsoft/playwright-cli` | frontend, test |
 
@@ -55,16 +55,26 @@ verification-before-completion의 완료 근거 원칙은 change-verification에
 | `codebase-exploration` | 코드 위치·호출 경로·검증 명령 조사 시 |
 | `systematic-debugging` | 버그 조사 배정 시 근거·실패 경로만 |
 
-### architect
+### deep-reviewer
 
 | 스킬 | 언제 사용하는가 |
 |---|---|
-| `change-design` | 계층 간 계약·대안·변경 순서 설계 시 |
-| `vercel-composition-patterns` | React 공용 컴포넌트 API 설계 시 |
-| `vercel-react-best-practices` | React/Next 서버·클라이언트 경계 설계 시 |
-| `nestjs-best-practices` | NestJS 모듈·DI·서비스 계약 설계 시 |
-| `java-springboot` | Spring Boot 서비스·DB 계약 설계 시 |
-| `frontend-design` | UI 구조·디자인 토큰 설계가 배정됐을 때만; 구현 금지 |
+| `change-design` | main이 해결하지 못한 계층 간 계약·대안·변경 순서 쟁점을 읽기 전용으로 검토할 때 |
+| `vercel-composition-patterns` | main이 해결하지 못한 React 공용 컴포넌트 API 설계 쟁점을 검토할 때 |
+| `vercel-react-best-practices` | main이 해결하지 못한 React/Next 서버·클라이언트 경계 쟁점을 검토할 때 |
+| `nestjs-best-practices` | main이 해결하지 못한 NestJS 모듈·DI·서비스 계약 쟁점을 검토할 때 |
+| `java-springboot` | main이 해결하지 못한 Spring Boot 서비스·DB 계약 쟁점을 검토할 때 |
+| `frontend-design` | main이 해결하지 못한 UI 구조·디자인 토큰 쟁점을 검토할 때만; 구현 금지 |
+
+### escalation
+
+| 스킬 | 언제 사용하는가 |
+|---|---|
+| `implementation-loop` | 근거가 확보된 국소 구현·수정 시 |
+| `nestjs-best-practices` | 실제 NestJS 국소 코드 변경 시 |
+| `java-springboot` | 실제 Spring Boot 국소 코드 변경 시 |
+| `systematic-debugging` | 반복 실패의 국소 원인을 좁힐 때; 새 설계는 main에 반환 |
+| `change-verification` | 국소 수정 결과를 검증할 때 |
 
 ### backend
 

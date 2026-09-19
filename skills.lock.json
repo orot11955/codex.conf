@@ -5,7 +5,7 @@
       "source": "archive:codex.file.zip/codex.file/codex/skills/task-orchestration",
       "source_archive_sha256": "3eed78f9fe535da0202e78a441dc2faf96c6e1de2d5e46a298e3a9c59c17f000",
       "source_tree_sha256": "151312170035d5c6688bef65b880c31f06f20dd5061a806959b289c4ba3e65d9",
-      "managed_tree_sha256": "da87f7a8f1231ef56526acb77da693a8b7bd1269571d45219c016367123eefe1",
+      "managed_tree_sha256": "12247bb5f161902ba43cdca29291d37b82a506dc95bb213f256843446fb3f149",
       "revision": "2026.09.17-unified.2"
     },
     "codebase-exploration": {
@@ -47,7 +47,7 @@
       "source": "archive:codex.file.zip/codex.file/codex/skills/security-review",
       "source_archive_sha256": "3eed78f9fe535da0202e78a441dc2faf96c6e1de2d5e46a298e3a9c59c17f000",
       "source_tree_sha256": "82afa30a52539798f9f9322c8e109b101ef95b9c05451542efd580910a109708",
-      "managed_tree_sha256": "60c4250a53bb6f25bb2ef6094b33849e840a918b1ddbffabcdada85ff9704490",
+      "managed_tree_sha256": "c7f90ab98f0a000315a9f674e611a0406981ef5971d452b2bcafefee8fe98800",
       "revision": "2026.09.17-unified.2"
     },
     "frontend-design": {
@@ -162,7 +162,7 @@
         }
       ],
       "revision": "2026.09.17-unified.2",
-      "managed_tree_sha256": "8f0185d5f06e4455130960d9269381d271de5f799a9488ecc61e5878f387b045"
+      "managed_tree_sha256": "ed1228112fd9b5b84c2192de6aef0edb2d5d95bb806c12b851a9e9bd81fe0e1b"
     },
     "systematic-debugging": {
       "source_kind": "locally-authored-focused-adaptation",

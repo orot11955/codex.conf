@@ -32,7 +32,7 @@ except ModuleNotFoundError:
 
 ROOT = Path(__file__).resolve().parents[1]
 NAME = re.compile(r"^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$")
-ROLES = {"architect", "scout", "backend", "frontend", "executor", "critic", "security", "test"}
+ROLES = {"deep-reviewer", "scout", "backend", "frontend", "executor", "critic", "security", "test", "escalation"}
 COMMON_KEYS = {"model", "model_reasoning_effort", "approvals_reviewer", "service_tier",
                "approval_policy", "sandbox_mode", "agents"}
 FORBIDDEN_LOCAL = COMMON_KEYS | {"profile", "profiles", "developer_instructions", "base_instructions",
@@ -42,6 +42,24 @@ BASE_AGENT_KEYS = {"enabled", "max_concurrent_threads_per_session", "default_sub
 ROLE_KEYS = {"name", "description", "model", "model_reasoning_effort", "sandbox_mode",
              "developer_instructions", "agents"}
 EFFORTS = {"minimal", "low", "medium", "high", "xhigh", "max"}
+# The old architect source fields are stable; generated instructions and skills
+# are appended by each package and are validated separately below.
+LEGACY_MANAGED_ROLE_CORE = {
+    "architect": {
+        "name": "architect",
+        "description": "여러 계층의 계약이나 설계 선택이 불명확할 때 최소 변경 설계를 제안한다.",
+        "model": "gpt-6-astra",
+        "model_reasoning_effort": "medium",
+        "sandbox_mode": "read-only",
+        "agents": {"enabled": False},
+        "developer_prefix": (
+            "구현 전에 실제 호출 경로와 기존 관례를 확인한다. 추천안 하나, 중요한 대안이 있을 때만 대안 하나를 제시한다.\n"
+            "API/DTO/DB 계약, 변경할 파일, 의존 순서, 검증 및 복구 방법을 짧게 정리한다.\n"
+            "명확한 국소 변경에는 별도 설계 문서를 만들지 않는다. 구현·리팩터링·커밋은 하지 않는다.\n"
+            "해결되지 않은 설계 쟁점만 main에 돌려주고 전역 재설계로 범위를 넓히지 않는다.\n"
+        ),
+    },
+}
 
 
 class Error(Exception):
@@ -391,7 +409,7 @@ def route_instructions(role: str, rules: list[dict[str, str]], skills_home: Path
     for r in rules:
         n = r["skill"]
         lines.append(f"- {n}: " + ("로컬 설정으로 비활성. 직접 읽어 우회하지 말고 필요하면 main/사용자에게 알린다." if n in disabled else r["when"]))
-    if role in {"scout", "architect", "critic", "security"}:
+    if role in {"scout", "deep-reviewer", "critic", "security"}:
         lines.append("읽기 전용 역할: 절차에 구현/브라우저/산출물 작성이 있어도 수행하지 않는다. 근거와 필요한 검증을 main에 반환한다.")
     lines.append("보고: 실제 사용한 스킬 이름과 수행한 검증·미실행 이유를 한 줄로 남긴다. 본문 읽기를 도구 실행 성공으로 보고하지 않는다.")
     return "\n".join(lines) + "\n"
@@ -413,7 +431,7 @@ def verify(root: Path = ROOT, check_lock: bool = True) -> dict[str, Any]:
     require(base["agents"]["enabled"] is True and base["agents"]["max_concurrent_threads_per_session"] == 3, "conf 동시성/활성 정책 불일치")
     require(base["approval_policy"] == "on-request" and base["sandbox_mode"] == "workspace-write", "공통 안전 기본값 변경 시 검증 계약도 명시적으로 검토하세요")
     require(base["approvals_reviewer"] in {"user", "auto_review"}, "승인 검토자 값 오류")
-    require({p.stem for p in (root / "agents").glob("*.toml")} == ROLES, "에이전트 집합 불일치(test 유지, tester 미설치)")
+    require({p.stem for p in (root / "agents").glob("*.toml")} == ROLES, "에이전트 집합 불일치")
     for p in (root / "agents").iterdir():
         require(p.suffix == ".toml", f"예상하지 않은 에이전트 원본: {p.name}")
         d = toml(p)
@@ -421,7 +439,7 @@ def verify(root: Path = ROOT, check_lock: bool = True) -> dict[str, Any]:
         require(d.get("name") == p.stem and d.get("description") and d.get("developer_instructions"), f"에이전트 필수 필드 오류: {p.name}")
         require(d.get("model_reasoning_effort") in EFFORTS, f"에이전트 추론 값 오류: {p.name}")
         require(d.get("agents") == {"enabled": False}, f"하위 재위임 차단 누락: {p.name}")
-        if p.stem in {"architect", "scout", "critic", "security"}:
+        if p.stem in {"deep-reviewer", "scout", "critic", "security"}:
             require(d.get("sandbox_mode") == "read-only", f"검토 역할의 읽기 전용 설정 누락: {p.name}")
     for p in (root / "config/os").glob("*.toml"):
         require(not (set(toml(p)) & FORBIDDEN_LOCAL), f"OS 레이어에서 공통 정책 변경 금지: {p.name}")
@@ -631,6 +649,39 @@ def duplicate_skills(paths: Paths, names: set[str], desired: dict[Path, Path | N
     return errors
 
 
+def retire_managed_legacy_role(paths: Paths, state: dict[str, Any], agents: Path,
+                               role: str, expected_core: dict[str, Any]) -> bool:
+    """Allow removal only for an unchanged role from the managed agents snapshot."""
+    record = state["targets"].get(str(paths.code / "agents"))
+    if record is None:
+        return False
+    snapshot = paths.backup(record.get("after"))
+    require(snapshot is not None and snapshot.is_dir(), f"기존 agents 백업이 없습니다: {role}")
+    require(fingerprint(snapshot) == record["expected"], f"기존 agents 백업 무결성 오류: {role}")
+    previous = snapshot / f"{role}.toml"
+    current = agents / f"{role}.toml"
+    if not exists(previous):
+        return False
+    require(previous.is_file() and not previous.is_symlink(), f"기존 관리 역할 형식 오류: {previous}")
+    require(exists(current) and current.is_file() and not current.is_symlink(),
+            f"기존 관리 역할이 변경되어 보존/중단합니다: {current}")
+    previous_data = toml(previous)
+    allowed = set(expected_core) - {"developer_prefix"} | {"developer_instructions", "skills"}
+    require(set(previous_data) <= allowed,
+            f"알 수 없는 이전 {role} 역할은 보존하고 중단합니다: {previous}")
+    for key, value in expected_core.items():
+        if key == "developer_prefix":
+            require(isinstance(previous_data.get("developer_instructions"), str)
+                    and previous_data["developer_instructions"].startswith(value),
+                    f"알 수 없는 이전 {role} 역할은 보존하고 중단합니다: {previous}")
+        else:
+            require(previous_data.get(key) == value,
+                    f"알 수 없는 이전 {role} 역할은 보존하고 중단합니다: {previous}")
+    require(sha(current.read_bytes()) == sha(previous.read_bytes()),
+            f"기존 관리 {role} 역할이 수정되어 보존/중단합니다: {current}")
+    return True
+
+
 def prepare(paths: Paths, state: dict[str, Any], stage: Path, manifest: dict[str, Any]) -> tuple[dict[Path, Path | None], dict[str, Any], list[str], set[str]]:
     require(not (paths.code / "AGENTS.override.md").exists(), "전역 AGENTS.override.md가 공통 지침을 가립니다. 내용을 검토해 옮긴 후 설치하세요(자동 삭제 안 함)")
     drift = check_drift(paths, state, allow_runtime_local=True)
@@ -674,6 +725,10 @@ def prepare(paths: Paths, state: dict[str, Any], stage: Path, manifest: dict[str
         require(old_tester.is_file() and sha(old_tester.read_bytes()) == provenance["legacy_tester_sha256"], "알 수 없는 tester 역할이 있습니다. test와의 관계를 검토한 뒤 별도 보관하세요")
         remove_node(old_tester)
         notes.append("기존 codex.file tester는 백업에 보존하고 현재 test로 통일")
+    old_architect = agents / "architect.toml"
+    if retire_managed_legacy_role(paths, state, agents, "architect", LEGACY_MANAGED_ROLE_CORE["architect"]):
+        remove_node(old_architect)
+        notes.append("기존 관리 architect는 백업에 보존하고 현재 deep-reviewer로 통일")
     common = (ROOT / "policy/subagent-common.md").read_text(encoding="utf-8").strip()
     for p in sorted((ROOT / "agents").glob("*.toml")):
         d = toml(p)

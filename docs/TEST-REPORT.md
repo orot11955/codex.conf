@@ -1,22 +1,22 @@
 # 검증 결과 — Codex + Obsidian Shared Wiki
 
-배포: **2026.09.17-unified.3** · 위키 코어: **3.0.1-conf.3** · 실행일: **2026-09-17**
+배포: **2026.09.19-agent.1** · 위키 코어: **3.0.1-conf.3** · 실행일: **2026-09-19**
 
 ## 실제 결과
 
-**154개 통과, 실패 0개, skip 0개.** 아래 6개 독립 suite를 실행하고 종료 코드·전체 로그·테스트 개수를 대조했다. Linux / Python 3.13.5 / PyYAML 6.0.3 / 로컬 Git의 임시 디렉터리에서 수행했다. 실제 사용자 HOME·기기·Gitea·모델 계정은 사용하지 않았다. `docs/history`의 이전 결과는 역사 자료이며 이번 결과에 중복 합산하지 않았다.
+**155개 통과, 실패 0개, skip 0개.** 아래 6개 suite를 실행하고 종료 코드와 테스트 개수를 대조했다. macOS / Python 3.14.7 / PyYAML 6.0.3 / 로컬 Git의 임시 디렉터리에서 수행했다. 실제 사용자 HOME·Gitea·모델 호출은 사용하지 않았다. `docs/history`의 이전 결과는 역사 자료이며 이번 결과에 중복 합산하지 않았다.
 
 | 검사 묶음 | 테스트 수 | 결과 |
 |---|---:|---|
-| 기존 Codex 배포·스킬·역할 회귀 | 80 | 통과 |
+| Codex 배포·스킬·역할 회귀 | 81 | 통과 |
 | 실제 v1 ZIP의 설치·업그레이드·복구 | 3 | 통과 |
 | Codex 위키 연결·SHA·project·권한 절차 | 29 | 통과 |
 | 실제 v2 → 위키 통합본·소유권·데이터 보존 | 4 | 통과 |
 | 위키 Git·문서·snapshot 공통 코어 | 14 | 통과 |
 | Rooty task·검토·설치·개인 상태 보존 | 24 | 통과 |
-| **합계** | **154** | **모두 통과** |
+| **합계** | **155** | **모두 통과** |
 
-로그: [test-output.txt](test-output.txt). 최초 검토에서 이전 스킬 개수 단언과 Rooty 버전 표시의 불일치를 발견해 수정한 뒤 위 6개 suite 전체를 다시 실행한 최종 결과다.
+로그: [test-output.txt](test-output.txt). macOS의 `/var` → `/private/var` 링크 때문에 임시 경로가 잘못 거부되던 테스트 fixture를 실제 경로로 정규화하고, 기존 10개 회귀 실패와 새 역할·프로필 계약을 수정한 뒤 전체 suite를 실행한 최종 결과다.
 
 ## 확인한 핵심 동작
 
@@ -36,7 +36,7 @@
 ```bash
 # codex.conf 루트
 python3 -B -m unittest discover -s tests -v
-# 합계 116개
+# 합계 117개
 
 cd integrations/rooty-wiki
 python3 -B -m unittest discover -s tests -v
@@ -48,20 +48,20 @@ cd ../..
 bash -n agentctl install.sh
 ```
 
-위 154개는 최종 실행에서 test_agentctl.py, test_upgrade.py, test_wiki_integration.py, test_wiki_upgrade.py, test_wiki.py, test_rooty.py를 각 suite로 나누어 실행한 합계다. 병렬 suite의 실행 시간을 제품 속도나 사용자 대기시간으로 해석하지 않는다.
+위 155개는 최종 실행에서 test_agentctl.py, test_upgrade.py, test_wiki_integration.py, test_wiki_upgrade.py, test_wiki.py, test_rooty.py를 실행한 합계다. 실행 시간을 제품 속도나 사용자 대기시간으로 해석하지 않는다.
 
 ## 실행하지 않은 범위
 
-- 이 환경에는 실제 Codex CLI와 인증된 모델 세션이 없다. CLI 성공/실패 검사는 테스트용 실행 파일을 사용한다. Luna/max·Astra/Terra/Sol 지원, 실제 역할·스킬 선택, sandbox 집행, shell environment include 필터의 런타임 동작을 검증한 것이 아니다.
+- PATH의 Codex CLI 0.155.0으로 `agentctl plan --cli` 설정 로딩을 확인했지만 인증된 모델 호출은 하지 않았다. 계정별 Sol/Astra/Luna 접근, 실제 역할·스킬 선택, sandbox 집행, shell environment include 필터의 런타임 동작을 검증한 것이 아니다.
 - 실제 Gitea·SSH 키·HTTPS 인증·네트워크 장애 복구, Hermes gateway/provider/remote terminal backend, Obsidian 앱·Vault GUI·플러그인은 실행하지 않았다.
 - 네이티브 macOS, Windows ACL/PowerShell/Keychain은 실행하지 않았다. 위키 런타임은 POSIX 전제이며 native Windows에서는 WSL을 안내한다.
-- pip 의존성 다운로드는 안내에 포함하지만 테스트 중 실제 원격 설치를 실행하지 않았다. 기존 검사 환경의 PyYAML 6.0.3을 사용했다.
+- PyYAML 6.0.3은 임시 가상환경에 설치해 위키 회귀에 사용했으며 제품 저장소나 사용자 Python 환경은 변경하지 않았다.
 - 실제 토큰·속도·요금·위키 내용의 정확성이나 자동 비밀 탐지·격리 보장은 측정하지 않았다. 역할 규칙의 정적 존재 확인은 모델의 준수 증명이 아니다.
 - Rooty setup은 Codex transaction과 별도이며 완전한 자동 롤백을 제공하지 않는다. 미래 임의 상태 형식의 범용 자동 migration은 미구현이다.
 
 ## 소스 식별자
 
-- `scripts/agentctl.py`: `7165d88eb964735a8cbf86ce6d668f3b8089b79a37a17f9d66aadc52d270ea75`
+- `scripts/agentctl.py`: `a48c381b33877b5bd389a51e25c5b125348dedbe4b3e01cf042b605308dbde1b`
 - `skills/shared-wiki/scripts/wiki.py`: `e1a81cdd72e3080831d63976fcaf26859aa9546795b297bf1b6b3ace233bb5e0`
 - `skills/shared-wiki/scripts/session.py`: `79ffe279a1074de86e6a81fe5304e72a091245835dcac201f6ca605ec9937845`
 - `integrations/rooty-wiki/tools/rooty_wiki.py`: `c8026ff2a778e78c75b98f82e1177c7a8aed0c8557470750fb6da066f7313bcb`

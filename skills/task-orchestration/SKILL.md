@@ -17,7 +17,8 @@ description: "Use only when the user explicitly requests the full multi-agent or
 ## 최소 역할 선택
 
 - `scout`: 경로·흐름·영향 범위가 불명확할 때만 읽기 전용 조사
-- `architect`: 새 계약·DB·보안·대규모 구조 결정이 있을 때만 읽기 전용 설계
+- `deep-reviewer`: main이 근거 확인 후에도 해결하지 못한 어려운 설계·정확성 쟁점만 읽기 전용 검토
+- `escalation`: Luna가 근거 보완 후 재시도해도 해결하지 못한 국소 문제의 진단·수정
 - `frontend`, `backend`, `executor`: 실제 변경 영역에 가장 가까운 구현 역할 1개가 기본
 - `test`: 별도 검증의 실익이 있을 때 실행한다. 테스트 파일 소유권을 받은 경우에만 테스트를 작성하고, 검증 전용 배정에서는 어떤 소스도 수정하지 않는다.
 - `critic`: 자동 검증 뒤에도 고위험 논리·회귀 판단이 남을 때 최대 1회

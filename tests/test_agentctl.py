@@ -26,7 +26,7 @@ class AgentctlTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory(prefix="codex-conf-test-")
         self.addCleanup(self.temp.cleanup)
-        self.base = Path(self.temp.name)
+        self.base = Path(self.temp.name).resolve()
         self.repo = self.base / "source with spaces"
         shutil.copytree(SOURCE, self.repo, ignore=shutil.ignore_patterns("__pycache__", ".git", "*.pyc"))
         self.home = self.base / "user"
@@ -80,18 +80,35 @@ class AgentctlTests(unittest.TestCase):
     def test_01_original_model_policy_and_role_names_preserved(self):
         self.cmd("verify")
         d = tomllib.loads((self.repo / "config.toml").read_text())
-        self.assertEqual((d["model"], d["model_reasoning_effort"]), ("gpt-5.6-luna", "max"))
-        self.assertEqual(d["service_tier"], "fast")
+        self.assertEqual((d["model"], d["model_reasoning_effort"]), ("gpt-5.6-sol", "high"))
+        self.assertEqual(d["service_tier"], "default")
         self.assertEqual(d["approvals_reviewer"], "auto_review")
         self.assertEqual(d["agents"]["max_concurrent_threads_per_session"], 3)
-        expected = {"architect": ("gpt-6-astra", "medium"), "security": ("gpt-6-astra", "low"),
-                    "scout": ("gpt-5.6-luna", "low"), "executor": ("gpt-5.6-luna", "low"),
-                    "backend": ("gpt-5.6-terra", "low"), "frontend": ("gpt-5.6-terra", "low"),
-                    "test": ("gpt-5.6-terra", "low"), "critic": ("gpt-5.6-terra", "medium")}
+        expected = {"deep-reviewer": ("gpt-6-astra", "high"), "security": ("gpt-6-astra", "high"),
+                    "scout": ("gpt-5.6-luna", "high"), "executor": ("gpt-5.6-luna", "max"),
+                    "backend": ("gpt-5.6-luna", "max"), "frontend": ("gpt-5.6-luna", "max"),
+                    "test": ("gpt-5.6-luna", "max"), "critic": ("gpt-5.6-luna", "max"),
+                    "escalation": ("gpt-5.6-sol", "high")}
         for name, values in expected.items():
             role = tomllib.loads((self.repo / f"agents/{name}.toml").read_text())
             self.assertEqual((role["model"], role["model_reasoning_effort"]), values)
             self.assertEqual(role["agents"], {"enabled": False})
+
+    def test_01b_role_routing_replacement_and_escalation_contracts(self):
+        routes = tomllib.loads((self.repo / "policy/skill-routing.toml").read_text())["roles"]
+        self.assertNotIn("architect", routes)
+        self.assertIn("deep-reviewer", routes)
+        self.assertIn("escalation", routes)
+        self.assertEqual(
+            {r["skill"] for r in routes["deep-reviewer"]["rules"]},
+            {"change-design", "vercel-composition-patterns", "vercel-react-best-practices",
+             "nestjs-best-practices", "java-springboot", "frontend-design"},
+        )
+        self.assertEqual(
+            {r["skill"] for r in routes["escalation"]["rules"]},
+            {r["skill"] for r in routes["backend"]["rules"]}
+            | {r["skill"] for r in routes["executor"]["rules"]},
+        )
 
     def test_02_unknown_shared_key_rejected(self):
         p = self.repo / "config.toml"
@@ -218,10 +235,10 @@ class AgentctlTests(unittest.TestCase):
         self.install()
         before = (self.code / "config.toml").read_bytes()
         p = self.repo / "config.toml"
-        p.write_text(p.read_text().replace('model = "gpt-5.6-luna"', 'model = "gpt-6-astra"'))
+        p.write_text(p.read_text().replace('model = "gpt-5.6-sol"', 'model = "gpt-5.6-luna"'))
         self.assertEqual((self.code / "config.toml").read_bytes(), before)
         self.install()
-        self.assertEqual(tomllib.loads((self.code / "config.toml").read_text())["model"], "gpt-6-astra")
+        self.assertEqual(tomllib.loads((self.code / "config.toml").read_text())["model"], "gpt-5.6-luna")
         self.cmd("rollback", "--sessions-stopped")
         self.assertEqual((self.code / "config.toml").read_bytes(), before)
 
@@ -255,12 +272,12 @@ class AgentctlTests(unittest.TestCase):
         self.install()
         (self.code / ".codex-conf/machine.toml").write_text('model="changed"\n')
         self.cmd("plan", ok=2)
-        self.assertEqual(tomllib.loads((self.code / "config.toml").read_text())["model"], "gpt-5.6-luna")
+        self.assertEqual(tomllib.loads((self.code / "config.toml").read_text())["model"], "gpt-5.6-sol")
 
     def test_23_shared_runtime_model_change_is_not_silently_adopted(self):
         self.install()
         p = self.code / "config.toml"
-        p.write_text(p.read_text().replace('"gpt-5.6-luna"', '"different-model"'))
+        p.write_text(p.read_text().replace('"gpt-5.6-sol"', '"different-model"'))
         self.cmd("plan", ok=2)
 
     def test_24_removed_skill_restores_baseline_and_releases_ownership(self):
@@ -322,7 +339,7 @@ class AgentctlTests(unittest.TestCase):
         shutil.move(self.repo, new)
         self.repo = new
         self.cmd("doctor")
-        self.assertTrue((self.code / "agents/architect.toml").is_file())
+        self.assertTrue((self.code / "agents/deep-reviewer.toml").is_file())
 
     def test_31_state_import_copies_only_markdown_without_overwrite(self):
         src = self.base / "old-state"
@@ -351,7 +368,7 @@ class AgentctlTests(unittest.TestCase):
         for osname in ("mac", "ubuntu", "windows"):
             self.install("--os", osname)
             d = tomllib.loads((self.code / "config.toml").read_text())
-            self.assertEqual(d["model"], "gpt-5.6-luna")
+            self.assertEqual(d["model"], "gpt-5.6-sol")
             self.assertNotIn("cli_auth_credentials_store", d)
             self.assertNotIn("projects", d)
 
@@ -433,11 +450,15 @@ class AgentctlTests(unittest.TestCase):
 
     def test_40_profiles_are_explicit_separate_files(self):
         self.install()
-        d = tomllib.loads((self.code / "conf-sol-high.config.toml").read_text())
-        self.assertEqual((d["model"], d["model_reasoning_effort"]), ("gpt-5.6-sol", "high"))
+        sol = tomllib.loads((self.code / "conf-sol-high.config.toml").read_text())
+        astra = tomllib.loads((self.code / "conf-astra-low.config.toml").read_text())
+        self.assertEqual((sol["model"], sol["model_reasoning_effort"]), ("gpt-5.6-sol", "high"))
+        self.assertEqual((astra["model"], astra["model_reasoning_effort"]), ("gpt-6-astra", "low"))
         base = tomllib.loads((self.code / "config.toml").read_text())
         self.assertNotIn("profile", base)
-        self.assertEqual(base["agents"], d["agents"])
+        self.assertEqual((base["model"], base["model_reasoning_effort"]), ("gpt-5.6-sol", "high"))
+        self.assertEqual(base["agents"], sol["agents"])
+        self.assertEqual(base["agents"], astra["agents"])
 
     def test_41_recursive_agents_disabled_in_rendered_config(self):
         self.install()
@@ -769,7 +790,7 @@ class AgentctlTests(unittest.TestCase):
         self.install()
         d = tomllib.loads((self.code / "config.toml").read_text())
         self.assertEqual(d["skills"]["config"], [{"path": str(self.skills / "change-design/SKILL.md"), "enabled": False}])
-        entry = next(e for e in self.read_role("architect")["skills"]["config"] if Path(e["path"]).parent.name == "change-design")
+        entry = next(e for e in self.read_role("deep-reviewer")["skills"]["config"] if Path(e["path"]).parent.name == "change-design")
         self.assertFalse(entry["enabled"])
         before = self.state()
         self.install()

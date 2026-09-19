@@ -45,7 +45,7 @@ review_after: null
 class WikiTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
-        self.base = Path(self.tmp.name)
+        self.base = Path(self.tmp.name).resolve()
         self.remote = self.base/'remote.git'
         self.repo = self.base/'source'
         self.home = self.base/'runtime'
