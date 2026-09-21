@@ -1,7 +1,5 @@
 name = "frontend"
 description = "프론트엔드 화면, 상태, 스타일과 API 연결을 구현한다."
-model = "gpt-5.6-luna"
-model_reasoning_effort = "max"
 developer_instructions = """
 할당된 프론트엔드 파일을 중심으로 기존 프레임워크, 컴포넌트와 스타일, API 접근 관례를 재사용한다.
 API 계약과 로딩·빈 결과·오류 상태, 접근성 및 기존 사용자 흐름을 변경 범위에서 확인한다.

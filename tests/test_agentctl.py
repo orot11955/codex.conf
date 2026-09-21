@@ -28,7 +28,8 @@ class AgentctlTests(unittest.TestCase):
         self.addCleanup(self.temp.cleanup)
         self.base = Path(self.temp.name).resolve()
         self.repo = self.base / "source with spaces"
-        shutil.copytree(SOURCE, self.repo, ignore=shutil.ignore_patterns("__pycache__", ".git", "*.pyc"))
+        shutil.copytree(SOURCE, self.repo,
+                        ignore=shutil.ignore_patterns("__pycache__", ".git", "*.pyc", "state"))
         self.home = self.base / "user"
         self.home.mkdir()
         self.code = self.home / ".codex"
@@ -79,20 +80,47 @@ class AgentctlTests(unittest.TestCase):
 
     def test_01_original_model_policy_and_role_names_preserved(self):
         self.cmd("verify")
-        d = tomllib.loads((self.repo / "config.toml").read_text())
-        self.assertEqual((d["model"], d["model_reasoning_effort"]), ("gpt-5.6-sol", "high"))
-        self.assertEqual(d["service_tier"], "default")
-        self.assertEqual(d["approvals_reviewer"], "auto_review")
-        self.assertEqual(d["agents"]["max_concurrent_threads_per_session"], 3)
-        expected = {"deep-reviewer": ("gpt-6-astra", "high"), "security": ("gpt-6-astra", "high"),
-                    "scout": ("gpt-5.6-luna", "high"), "executor": ("gpt-5.6-luna", "max"),
-                    "backend": ("gpt-5.6-luna", "max"), "frontend": ("gpt-5.6-luna", "max"),
-                    "test": ("gpt-5.6-luna", "max"), "critic": ("gpt-5.6-luna", "max"),
-                    "escalation": ("gpt-5.6-sol", "high")}
-        for name, values in expected.items():
-            role = tomllib.loads((self.repo / f"agents/{name}.toml").read_text())
-            self.assertEqual((role["model"], role["model_reasoning_effort"]), values)
-            self.assertEqual(role["agents"], {"enabled": False})
+        source = tomllib.loads((self.repo / "config.toml").read_text())
+        models = tomllib.loads((self.repo / "policy/models.toml").read_text())
+        self.assertNotIn("model", source)
+        self.assertNotIn("default_subagent_model", source["agents"])
+        self.assertEqual(set(models), {"format_version", "main", "defaults", "roles", "profiles"})
+        self.assertEqual(set(models["roles"]), {p.stem for p in (self.repo / "agents").glob("*.toml")})
+        self.assertEqual(source["service_tier"], "default")
+        self.assertEqual(source["approvals_reviewer"], "auto_review")
+        self.assertEqual(source["agents"]["max_concurrent_threads_per_session"], 3)
+        for name, values in models["roles"].items():
+            role_source = tomllib.loads((self.repo / f"agents/{name}.toml").read_text())
+            self.assertNotIn("model", role_source)
+            self.assertEqual(set(values), {"model", "model_reasoning_effort"})
+            self.assertEqual(role_source["agents"], {"enabled": False})
+
+    def test_01a_models_command_shows_single_source(self):
+        output = self.cmd("models").stdout
+        models = tomllib.loads((self.repo / "policy/models.toml").read_text())
+        self.assertIn("모델 원본: policy/models.toml", output)
+        escalation = models["roles"]["escalation"]
+        self.assertIn(f"agent escalation: {escalation['model']} / {escalation['model_reasoning_effort']}", output)
+
+    def test_01aa_direct_model_duplicates_are_rejected(self):
+        config = self.repo / "config.toml"
+        config.write_text('model = "duplicate"\n' + config.read_text())
+        self.cmd("verify", ok=2)
+
+    def test_01ab_missing_role_model_is_rejected(self):
+        models = self.repo / "policy/models.toml"
+        data = tomllib.loads(models.read_text())
+        del data["roles"]["backend"]
+        models.write_text(self.load_module().dumps(data))
+        self.cmd("verify", ok=2)
+
+    def test_01ac_direct_role_or_profile_model_duplicates_are_rejected(self):
+        role = self.repo / "agents/backend.toml"
+        role.write_text('model = "duplicate"\n' + role.read_text())
+        self.cmd("verify", ok=2)
+        role.write_text(role.read_text().replace('model = "duplicate"\n', ""))
+        self.file(self.repo / "profiles/duplicate.toml", 'model="duplicate"\nmodel_reasoning_effort="low"\n')
+        self.cmd("verify", ok=2)
 
     def test_01b_role_routing_replacement_and_escalation_contracts(self):
         routes = tomllib.loads((self.repo / "policy/skill-routing.toml").read_text())["roles"]
@@ -126,6 +154,13 @@ class AgentctlTests(unittest.TestCase):
         self.cmd("verify", ok=2)
         self.cmd("lock-skills")
         self.cmd("verify")
+
+    def test_04a_payload_includes_renderer_logic(self):
+        mod = self.load_module()
+        before = mod.payload_hash(self.repo)
+        renderer = self.repo / "scripts/agentctl.py"
+        renderer.write_text(renderer.read_text() + "\n# renderer change\n")
+        self.assertNotEqual(before, mod.payload_hash(self.repo))
 
     def test_05_malformed_yaml_rejected(self):
         (self.repo / "skills/change-design/agents/openai.yaml").write_text("interface: [broken\n")
@@ -234,11 +269,21 @@ class AgentctlTests(unittest.TestCase):
     def test_18_source_edit_does_not_change_active_install(self):
         self.install()
         before = (self.code / "config.toml").read_bytes()
-        p = self.repo / "config.toml"
-        p.write_text(p.read_text().replace('model = "gpt-5.6-sol"', 'model = "gpt-5.6-luna"'))
+        p = self.repo / "policy/models.toml"
+        data = tomllib.loads(p.read_text())
+        data["main"]["model"] = "changed-main-model"
+        data["defaults"]["model"] = "changed-default-model"
+        data["roles"]["backend"]["model"] = "changed-backend-model"
+        data["profiles"]["conf-astra-low"]["model"] = "changed-profile-model"
+        p.write_text(self.load_module().dumps(data))
         self.assertEqual((self.code / "config.toml").read_bytes(), before)
         self.install()
-        self.assertEqual(tomllib.loads((self.code / "config.toml").read_text())["model"], "gpt-5.6-luna")
+        current = tomllib.loads((self.code / "config.toml").read_text())
+        self.assertEqual(current["model"], "changed-main-model")
+        self.assertEqual(current["agents"]["default_subagent_model"], "changed-default-model")
+        self.assertEqual(self.read_role("backend")["model"], "changed-backend-model")
+        profile = tomllib.loads((self.code / "conf-astra-low.config.toml").read_text())
+        self.assertEqual(profile["model"], "changed-profile-model")
         self.cmd("rollback", "--sessions-stopped")
         self.assertEqual((self.code / "config.toml").read_bytes(), before)
 
@@ -269,10 +314,11 @@ class AgentctlTests(unittest.TestCase):
         self.assertEqual(current["notify"], ["/local/notify"])
 
     def test_22_machine_cannot_change_model_policy(self):
+        expected = tomllib.loads((self.repo / "policy/models.toml").read_text())["main"]["model"]
         self.install()
         (self.code / ".codex-conf/machine.toml").write_text('model="changed"\n')
         self.cmd("plan", ok=2)
-        self.assertEqual(tomllib.loads((self.code / "config.toml").read_text())["model"], "gpt-5.6-sol")
+        self.assertEqual(tomllib.loads((self.code / "config.toml").read_text())["model"], expected)
 
     def test_23_shared_runtime_model_change_is_not_silently_adopted(self):
         self.install()
@@ -450,23 +496,33 @@ class AgentctlTests(unittest.TestCase):
 
     def test_40_profiles_are_explicit_separate_files(self):
         self.install()
+        models = tomllib.loads((self.repo / "policy/models.toml").read_text())
         sol = tomllib.loads((self.code / "conf-sol-high.config.toml").read_text())
         astra = tomllib.loads((self.code / "conf-astra-low.config.toml").read_text())
-        self.assertEqual((sol["model"], sol["model_reasoning_effort"]), ("gpt-5.6-sol", "high"))
-        self.assertEqual((astra["model"], astra["model_reasoning_effort"]), ("gpt-6-astra", "low"))
+        self.assertEqual((sol["model"], sol["model_reasoning_effort"]),
+                         (models["profiles"]["conf-sol-high"]["model"],
+                          models["profiles"]["conf-sol-high"]["model_reasoning_effort"]))
+        self.assertEqual((astra["model"], astra["model_reasoning_effort"]),
+                         (models["profiles"]["conf-astra-low"]["model"],
+                          models["profiles"]["conf-astra-low"]["model_reasoning_effort"]))
         base = tomllib.loads((self.code / "config.toml").read_text())
         self.assertNotIn("profile", base)
-        self.assertEqual((base["model"], base["model_reasoning_effort"]), ("gpt-5.6-sol", "high"))
+        self.assertEqual((base["model"], base["model_reasoning_effort"]),
+                         (models["main"]["model"], models["main"]["model_reasoning_effort"]))
         self.assertEqual(base["agents"], sol["agents"])
         self.assertEqual(base["agents"], astra["agents"])
 
     def test_41_recursive_agents_disabled_in_rendered_config(self):
         self.install()
+        models = tomllib.loads((self.repo / "policy/models.toml").read_text())
         for p in (self.code / "agents").glob("*.toml"):
             d = tomllib.loads(p.read_text())
             self.assertEqual(d["agents"], {"enabled": False})
+            self.assertEqual((d["model"], d["model_reasoning_effort"]),
+                             (models["roles"][p.stem]["model"],
+                              models["roles"][p.stem]["model_reasoning_effort"]))
             self.assertEqual(d["developer_instructions"].count("보통 10줄 이내"), 1)
-            self.assertEqual(d["developer_instructions"].count("Luna 역할이면 다음 중 하나라도"), 1)
+            self.assertEqual(d["developer_instructions"].count("main이 위임한 일반 하위 역할이면 다음 중 하나라도"), 1)
             self.assertIn("단일 반증 가능 근본 원인 가설", d["developer_instructions"])
 
     def test_42_toml_round_trip_nested_arrays_inline_tables_and_keys(self):

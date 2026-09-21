@@ -1,3 +1,0 @@
-# 같은 작업을 비교하거나 명시적으로 Astra를 사용할 때만 선택한다.
-model = "gpt-6-astra"
-model_reasoning_effort = "low"

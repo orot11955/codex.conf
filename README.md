@@ -20,7 +20,7 @@
 
 ## 먼저 확인할 사항
 
-**메인은 `gpt-5.6-sol / high`, 기본 하위 에이전트는 `gpt-5.6-luna / max`입니다.** main이 일반 설계와 통합을 맡고, 진행 정체·범위 확대·경계 결정·고위험 변경 트리거가 발생하면 Luna는 편집을 멈추고 Sol main에 이관합니다. 국소 난제만 escalation이 인수하며 security와 deep-reviewer는 각 호출 조건을 유지합니다. 역할별 모델과 추론은 `config.toml`, `agents/*.toml`이 기준이며 [역할표](docs/ROLE-MATRIX.md)를 함께 제공합니다.
+**모델과 추론 설정의 단일 원본은 `policy/models.toml`입니다.** main이 일반 설계와 통합을 맡고, 진행 정체·범위 확대·경계 결정·고위험 변경 트리거가 발생하면 일반 하위 역할은 편집을 멈추고 main에 이관합니다. 국소 난제만 escalation이 인수하며 security와 deep-reviewer는 각 호출 조건을 유지합니다. 현재 매핑은 `./agentctl models`로 확인하고 [역할표](docs/ROLE-MATRIX.md)를 함께 참고합니다.
 
 **모델·추론의 실행 호환성은 별도 확인이 필요합니다.** 모델별 지원과 설치된 CLI의 설정 파서, 계정 접근 권한은 서로 다릅니다. 설치된 CLI로 `plan --cli`를 실행하세요. CLI가 설정을 거부하면 적용하지 않으며 모델·추론을 자동으로 낮추지 않습니다. 실제 계정의 모델 접근·추론 지원은 새 세션에서 별도로 확인해야 합니다. 상세 내용은 [호환성](docs/COMPATIBILITY.md)에 있습니다.
 
@@ -125,9 +125,10 @@ git pull --ff-only
 
 | 변경 대상 | 수정할 원본 |
 |---|---|
-| 메인 모델·추론·동시성·승인·샌드박스 | `config.toml` |
+| main·기본 하위·역할·프로필 모델과 추론 | `policy/models.toml` |
+| 동시성·승인·샌드박스 등 공통 비모델 설정 | `config.toml` |
 | 항상 지킬 작업 규칙 | `AGENTS.md` |
-| 역할별 모델·범위·추론 | `agents/<role>.toml` |
+| 역할별 범위·권한·지침 | `agents/<role>.toml` |
 | 하위 공통 금지·출력 규칙 | `policy/subagent-common.md` |
 | 역할별 스킬 이름·사용 조건 | `policy/skill-routing.toml` |
 | 긴 절차·체크리스트 | `skills/<name>/SKILL.md` |
@@ -137,6 +138,22 @@ git pull --ff-only
 OS별로 공통 설정을 복제하지 않습니다. TOML은 구조적으로 합치며 배열은 교체합니다. `machine.toml`에서는 모델·추론·에이전트·승인·샌드박스 등 공통 정책을 우회할 수 없습니다. 기본적으로 기존 기기별 값은 보존합니다. 키체인 사용 여부를 OS 이름만으로 강제 변경하지 않습니다.
 
 공통 키를 추가하거나 역할 집합·동시성 상한 등을 의도적으로 바꿀 때는 설치 도구의 검증 계약과 회귀 테스트도 같이 바꿉니다. 알 수 없는 새 설정을 자동으로 허용하지 않는 보수적인 개인 패키지입니다.
+
+모델을 바꿀 때는 `policy/models.toml`만 수정합니다. `config.toml`, `agents/*.toml`, 별도 `profiles/*.toml`에 모델 값을 복제하면 검증이 실패합니다.
+
+```bash
+./agentctl models
+# policy/models.toml 수정
+./agentctl verify
+./agentctl plan --cli
+
+# 이 기기에 처음 관리 설치할 때, 모든 Codex CLI/앱/IDE 작업을 종료한 뒤
+./agentctl install --sessions-stopped
+
+# 이후 변경부터는 install 대신 다음 한 명령으로 검증 후 갱신
+./agentctl sync --sessions-stopped
+./agentctl doctor --cli
+```
 
 스킬을 편집한 뒤에는 내용을 검토하고 lock을 갱신합니다.
 
@@ -242,4 +259,4 @@ $frontend-design 기존 Button/FormField/DataTable을 재사용해서 관리 화
 
 Playwright CLI/브라우저/Node 패키지/MCP는 이 ZIP이 설치하지 않습니다. 이미 사용 가능한 도구와 프로젝트 테스트를 우선하며 없으면 미실행으로 보고합니다. 테스트/스크린샷은 task+role별 세션으로 격리하고 개인 브라우저·cookie·인증 상태를 동기화하지 않습니다.
 
-추가 스킬·제외 판단과 역할별 상세 조건은 [스킬 운영표](SKILLS.md), [종합 검토](docs/REVIEW-2026-09-17.md), [런타임 수용 점검](docs/RUNTIME-ACCEPTANCE.md)을 보세요.
+임무 처리와 에스컬레이션의 전체 흐름은 [임무 수행 흐름도](docs/MISSION-FLOW.md)를 참고하세요. 추가 스킬·제외 판단과 역할별 상세 조건은 [스킬 운영표](SKILLS.md), [종합 검토](docs/REVIEW-2026-09-17.md), [런타임 수용 점검](docs/RUNTIME-ACCEPTANCE.md)을 보세요.

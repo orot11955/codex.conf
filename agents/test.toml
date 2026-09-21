@@ -1,7 +1,5 @@
 name = "test"
 description = "변경에 맞는 회귀 테스트를 작성·실행하고 통합 검증 결과를 정리한다."
-model = "gpt-5.6-luna"
-model_reasoning_effort = "max"
 developer_instructions = """
 수용 조건과 수정 전 실패/수정 후 성공을 보여주는 테스트를 우선한다.
 main이 테스트 파일 소유권을 할당한 경우에만 테스트를 편집하며 제품 코드는 수정하지 않는다.

@@ -1,78 +1,14 @@
 # 공통 원본. 각 기기의 config.toml은 agentctl이 생성한다.
-# main은 설계·통합을 맡고 Luna에 범위가 명확한 작업을 위임한다.
-# 하위 역할의 max 추론 지원 여부는 실제 설치된 CLI에서 확인한다.
-model = "gpt-5.6-sol"
-model_reasoning_effort = "high"
+# 모델·추론은 policy/models.toml에서 설치 설정으로 생성한다.
 approvals_reviewer = "auto_review"
-service_tier = "fast"
+service_tier = "default"
 
 # 기존 codex.file의 명시적 샌드박스 기본값만 가져온다.
 # auto_review는 사용자의 업무 승인/운영 배포 승인을 대신하지 않는다.
 approval_policy = "on-request"
 sandbox_mode = "workspace-write"
 
-notify = ["/Users/orot/.codex/computer-use/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient", "turn-ended"]
-
 [agents]
 enabled = true
 max_concurrent_threads_per_session = 3
-default_subagent_model = "gpt-5.6-luna"
-default_subagent_reasoning_effort = "max"
 interrupt_message = true
-
-[desktop]
-followUpQueueMode = "steer"
-conversationDetailMode = "STEPS_PROSE"
-
-[marketplaces.openai-bundled]
-source_type = "local"
-source = "/Users/orot/.codex/.tmp/bundled-marketplaces/openai-bundled"
-
-[plugins."browser@openai-bundled"]
-enabled = true
-
-[plugins."unified-computer-use@openai-bundled"]
-enabled = true
-
-[plugins."chrome@openai-bundled"]
-enabled = true
-
-[plugins."computer-use@openai-bundled"]
-enabled = true
-
-[plugins."visualize@openai-bundled"]
-enabled = true
-
-[mcp_servers.node_repl]
-args = []
-command = "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node_repl"
-startup_timeout_sec = 120
-
-[mcp_servers.node_repl.env]
-NODE_REPL_NATIVE_PIPE_CONNECT_TIMEOUT_MS = "1000"
-NODE_REPL_NODE_MODULE_DIRS = "/Applications/ChatGPT.app/Contents/Resources/cua_node/lib/node_modules"
-NODE_REPL_NODE_PATH = "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node"
-NODE_REPL_TRUSTED_CODE_PATHS = "/Users/orot/.codex:/Applications/ChatGPT.app/Contents/Resources/cua_node/lib/node_modules"
-CODEX_HOME = "/Users/orot/.codex"
-BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
-BROWSER_USE_TINYSKY_ENABLED = "1"
-NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER = ""
-NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME = ""
-NODE_REPL_INSTRUCTIONS_USE_CASE_COMPUTER_USE = ""
-BROWSER_USE_CODEX_APP_BUILD_FLAVOR = "prod"
-BROWSER_USE_CODEX_APP_VERSION = "26.915.31945"
-NODE_REPL_TRUSTED_SERVICES = '{"browser":"/Users/orot/.codex/plugins/cache/openai-bundled/browser/26.915.31945/scripts/browser-service.mjs","sky":"@oai/sky/service"}'
-SKY_CUA_SERVICE_PATH = "/Users/orot/.codex/computer-use/Codex Computer Use.app"
-CODEX_CLI_PATH = "/Applications/ChatGPT.app/Contents/Resources/codex"
-
-[mcp_servers.computer-use]
-command = "./Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient"
-args = ["mcp"]
-cwd = "."
-enabled = false
-
-[projects."/Users/orot/workbench/codex.conf"]
-trust_level = "trusted"
-
-[tui.model_availability_nux]
-gpt-6-astra = 2

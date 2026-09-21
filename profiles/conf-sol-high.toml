@@ -1,3 +1,0 @@
-# 기존 프로필 이름 호환용. 현재 기본 main과 같은 Sol/high를 명시적으로 선택한다.
-model = "gpt-5.6-sol"
-model_reasoning_effort = "high"

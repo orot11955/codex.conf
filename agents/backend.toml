@@ -1,7 +1,5 @@
 name = "backend"
 description = "API, 서비스, 저장소, 트랜잭션 등 백엔드 변경을 구현한다."
-model = "gpt-5.6-luna"
-model_reasoning_effort = "max"
 developer_instructions = """
 할당된 백엔드 파일을 중심으로 해당 저장소의 프레임워크, 빌드 구조와 개발 지침을 따른다.
 요청/응답 계약, 입력 검증, 권한, 트랜잭션, 기존 프로시저 호환성을 변경 경로에서 확인한다.

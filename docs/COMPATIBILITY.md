@@ -4,7 +4,7 @@
 
 ## 1. 메인 Sol/high와 역할별 추론
 
-main은 비용 우선 비교에 따라 Sol/high를 사용하고, 하위 역할의 기존 추론 설정은 유지한다. Sol 모델 문서는 high를 지원한다. 모델 API의 지원 수준과 설치된 Codex CLI 파서·계정 권한은 별개이므로 실제 CLI에서 로딩을 확인한다. [모델 선택 기록](MODEL-SELECTION.md)에 비용 근거와 한계를 남겼다.
+실제 main·기본 하위·역할·프로필 매핑은 `policy/models.toml` 한 곳에서 관리한다. 현재 기본 선택의 근거는 [모델 선택 기록](MODEL-SELECTION.md)에 남긴다. 모델 API의 지원 수준과 설치된 Codex CLI 파서·계정 권한은 별개이므로 실제 CLI에서 로딩을 확인한다.
 
 ```bash
 codex --version
@@ -19,7 +19,7 @@ CLI 로딩 검사는 임시 CODEX_HOME과 프로젝트 밖의 임시 작업 디�
 
 ## 2. 사용자 에이전트와 재위임
 
-공식 사용자 역할 경로는 `~/.codex/agents/*.toml`이며 name, description, developer_instructions가 필요하다. 역할별 TOML에서 지원되는 설정을 지정할 수 있다. 패키지는 원본 모델/추론을 유지하고 모든 하위 역할에 `[agents] enabled=false`를 생성한다. 메인의 agents.enabled는 true다.
+공식 사용자 역할 경로는 `~/.codex/agents/*.toml`이며 name, description, developer_instructions가 필요하다. 역할별 TOML에서 지원되는 설정을 지정할 수 있다. 패키지는 `policy/models.toml`의 값을 역할 설치본에 주입하고 모든 하위 역할에 `[agents] enabled=false`를 생성한다. 메인의 agents.enabled는 true다.
 
 이는 지원 런타임의 다중 에이전트 도구 비활성화 설정이다. OS 수준 보안 경계나 악성 코드 실행 방지를 제공하는 별도 격리 기술은 아니다. 하위 역할이 main과 같은 모든 지침·스킬 본문을 자동으로 상속한다고 가정하지 않는다.
 

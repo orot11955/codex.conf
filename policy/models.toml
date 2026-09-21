@@ -1,0 +1,55 @@
+format_version = 1
+
+# 모델·추론의 유일한 수동 수정 원본이다.
+# 변경 후: ./agentctl verify && ./agentctl plan --cli
+[main]
+model = "gpt-5.6-sol"
+model_reasoning_effort = "high"
+
+[defaults]
+model = "gpt-5.6-luna"
+model_reasoning_effort = "max"
+
+[roles.backend]
+model = "gpt-5.6-luna"
+model_reasoning_effort = "max"
+
+[roles.critic]
+model = "gpt-5.6-luna"
+model_reasoning_effort = "max"
+
+[roles.deep-reviewer]
+model = "gpt-6-astra"
+model_reasoning_effort = "high"
+
+[roles.escalation]
+model = "gpt-5.6-sol"
+model_reasoning_effort = "high"
+
+[roles.executor]
+model = "gpt-5.6-luna"
+model_reasoning_effort = "max"
+
+[roles.frontend]
+model = "gpt-5.6-luna"
+model_reasoning_effort = "max"
+
+[roles.scout]
+model = "gpt-5.6-luna"
+model_reasoning_effort = "high"
+
+[roles.security]
+model = "gpt-6-astra"
+model_reasoning_effort = "high"
+
+[roles.test]
+model = "gpt-5.6-luna"
+model_reasoning_effort = "max"
+
+[profiles.conf-sol-high]
+model = "gpt-5.6-sol"
+model_reasoning_effort = "high"
+
+[profiles.conf-astra-low]
+model = "gpt-6-astra"
+model_reasoning_effort = "low"

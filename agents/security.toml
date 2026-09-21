@@ -1,7 +1,5 @@
 name = "security"
 description = "실제 보안 경계에 영향을 주는 변경 또는 명시적인 보안 검토 요청에만 호출한다. 일반 구현의 필수 검토 단계가 아니다."
-model = "gpt-6-astra"
-model_reasoning_effort = "high"
 sandbox_mode = "read-only"
 developer_instructions = """
 main이 제시한 보안 관련성이 실제 코드에 있는지 먼저 확인한다. 없으면 짧게 해당 없음을 반환한다.

@@ -35,12 +35,16 @@ NAME = re.compile(r"^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$")
 ROLES = {"deep-reviewer", "scout", "backend", "frontend", "executor", "critic", "security", "test", "escalation"}
 COMMON_KEYS = {"model", "model_reasoning_effort", "approvals_reviewer", "service_tier",
                "approval_policy", "sandbox_mode", "agents"}
+SOURCE_COMMON_KEYS = COMMON_KEYS - {"model", "model_reasoning_effort"}
 FORBIDDEN_LOCAL = COMMON_KEYS | {"profile", "profiles", "developer_instructions", "base_instructions",
                                "experimental_instructions_file", "model_instructions_file"}
 BASE_AGENT_KEYS = {"enabled", "max_concurrent_threads_per_session", "default_subagent_model",
                    "default_subagent_reasoning_effort", "interrupt_message"}
+SOURCE_AGENT_KEYS = BASE_AGENT_KEYS - {"default_subagent_model", "default_subagent_reasoning_effort"}
 ROLE_KEYS = {"name", "description", "model", "model_reasoning_effort", "sandbox_mode",
              "developer_instructions", "agents"}
+SOURCE_ROLE_KEYS = ROLE_KEYS - {"model", "model_reasoning_effort"}
+MODEL_KEYS = {"model", "model_reasoning_effort"}
 EFFORTS = {"minimal", "low", "medium", "high", "xhigh", "max"}
 # The old architect source fields are stable; generated instructions and skills
 # are appended by each package and are validated separately below.
@@ -130,6 +134,53 @@ def merge(left: dict[str, Any], right: dict[str, Any]) -> dict[str, Any]:
             # Arrays are replaced, never concatenated or duplicated.
             result[key] = copy.deepcopy(val)
     return result
+
+
+def model_policy(root: Path = ROOT) -> dict[str, Any]:
+    policy = toml(root / "policy/models.toml")
+    require(set(policy) == {"format_version", "main", "defaults", "roles", "profiles"},
+            "모델 정책 키 오류: policy/models.toml만 모델 원본으로 사용합니다")
+    require(policy["format_version"] == 1, "지원하지 않는 모델 정책 형식")
+    require(isinstance(policy["roles"], dict) and isinstance(policy["profiles"], dict),
+            "모델 정책 roles/profiles 형식 오류")
+    require(set(policy["roles"]) == ROLES, "모델 정책의 역할 집합 불일치")
+    require(policy["profiles"], "모델 정책에는 하나 이상의 선택 프로필이 필요합니다")
+    sections = [("main", policy["main"]), ("defaults", policy["defaults"])]
+    sections += [(f"roles.{name}", values) for name, values in policy["roles"].items()]
+    sections += [(f"profiles.{name}", values) for name, values in policy["profiles"].items()]
+    for name, values in sections:
+        require(isinstance(values, dict) and set(values) == MODEL_KEYS,
+                f"모델 정책 필드 오류: {name}")
+        require(isinstance(values["model"], str) and values["model"].strip(),
+                f"모델 정책 model 오류: {name}")
+        require(values["model_reasoning_effort"] in EFFORTS,
+                f"모델 정책 추론 값 오류: {name}")
+    for name in policy["profiles"]:
+        require(name.startswith("conf-") and NAME.fullmatch(name),
+                f"관리 프로필 이름 오류: {name}")
+    return policy
+
+
+def rendered_base(root: Path = ROOT) -> dict[str, Any]:
+    source = toml(root / "config.toml")
+    models = model_policy(root)
+    agents = {
+        "default_subagent_model": models["defaults"]["model"],
+        "default_subagent_reasoning_effort": models["defaults"]["model_reasoning_effort"],
+        **source["agents"],
+    }
+    return {**models["main"], **source, "agents": agents}
+
+
+def rendered_role(path: Path, root: Path = ROOT) -> dict[str, Any]:
+    source = toml(path)
+    models = model_policy(root)["roles"][path.stem]
+    return {
+        "name": source["name"],
+        "description": source["description"],
+        **models,
+        **{key: value for key, value in source.items() if key not in {"name", "description"}},
+    }
 
 
 def content_tree_hash(path: Path) -> str:
@@ -424,10 +475,13 @@ def verify(root: Path = ROOT, check_lock: bool = True) -> dict[str, Any]:
     require(isinstance(names, list) and len(names) == len(set(names)) and all(isinstance(n, str) and NAME.fullmatch(n) for n in names), "스킬 manifest의 중복/잘못된 이름")
     require(set(p.name for p in (root / "skills").iterdir()) == set(names), "스킬 디렉터리와 manifest가 다릅니다")
     routing(root, names)
+    model_policy(root)
     base = toml(root / "config.toml")
-    require(set(base) == COMMON_KEYS, "공통 config 키 오류: 기기별 값은 machine.toml, 공통 새 키는 검증 계약도 함께 갱신하세요")
-    require(set(base["agents"]) == BASE_AGENT_KEYS, "공통 agents 키 오류(max_depth 등 옛 키는 이식하지 않음)")
-    require(base["model_reasoning_effort"] in EFFORTS and isinstance(base["model"], str), "공통 모델/추론 오류")
+    require(set(base) == SOURCE_COMMON_KEYS, "공통 config 키 오류: 모델은 policy/models.toml, 기기별 값은 machine.toml에서 관리하세요")
+    require(set(base["agents"]) == SOURCE_AGENT_KEYS, "공통 agents 키 오류: 기본 하위 모델은 policy/models.toml에서 관리하세요")
+    runtime_base = rendered_base(root)
+    require(set(runtime_base) == COMMON_KEYS and set(runtime_base["agents"]) == BASE_AGENT_KEYS,
+            "생성 config 모델 계약 오류")
     require(base["agents"]["enabled"] is True and base["agents"]["max_concurrent_threads_per_session"] == 3, "conf 동시성/활성 정책 불일치")
     require(base["approval_policy"] == "on-request" and base["sandbox_mode"] == "workspace-write", "공통 안전 기본값 변경 시 검증 계약도 명시적으로 검토하세요")
     require(base["approvals_reviewer"] in {"user", "auto_review"}, "승인 검토자 값 오류")
@@ -435,19 +489,19 @@ def verify(root: Path = ROOT, check_lock: bool = True) -> dict[str, Any]:
     for p in (root / "agents").iterdir():
         require(p.suffix == ".toml", f"예상하지 않은 에이전트 원본: {p.name}")
         d = toml(p)
-        require(not (set(d) - ROLE_KEYS), f"에이전트의 미지원 키: {p.name}")
+        require(set(d) <= SOURCE_ROLE_KEYS and not (set(d) & MODEL_KEYS),
+                f"에이전트 모델은 policy/models.toml에서만 관리합니다: {p.name}")
         require(d.get("name") == p.stem and d.get("description") and d.get("developer_instructions"), f"에이전트 필수 필드 오류: {p.name}")
-        require(d.get("model_reasoning_effort") in EFFORTS, f"에이전트 추론 값 오류: {p.name}")
         require(d.get("agents") == {"enabled": False}, f"하위 재위임 차단 누락: {p.name}")
+        generated = rendered_role(p, root)
+        require(set(generated) <= ROLE_KEYS and generated["model_reasoning_effort"] in EFFORTS,
+                f"생성 에이전트 모델 계약 오류: {p.name}")
         if p.stem in {"deep-reviewer", "scout", "critic", "security"}:
             require(d.get("sandbox_mode") == "read-only", f"검토 역할의 읽기 전용 설정 누락: {p.name}")
     for p in (root / "config/os").glob("*.toml"):
         require(not (set(toml(p)) & FORBIDDEN_LOCAL), f"OS 레이어에서 공통 정책 변경 금지: {p.name}")
-    for p in (root / "profiles").glob("*.toml"):
-        require(p.stem.startswith("conf-") and NAME.fullmatch(p.stem), "관리 프로필은 conf- 접두사를 사용하세요")
-        d = toml(p)
-        require(set(d) <= {"model", "model_reasoning_effort"}, "선택 프로필에는 모델·추론 차이만 허용")
-        require(d.get("model_reasoning_effort") in EFFORTS, "프로필 추론 오류")
+    require(not list((root / "profiles").glob("*.toml")),
+            "프로필 모델은 policy/models.toml에서만 관리합니다")
     lock = load_json(root / "skills.lock.json")
     require(set(lock.get("skills", {})) == set(names), "skills.lock.json과 manifest의 스킬 집합이 다릅니다")
     for n in names:
@@ -476,8 +530,9 @@ def verify(root: Path = ROOT, check_lock: bool = True) -> dict[str, Any]:
 
 
 def payload_hash(root: Path = ROOT) -> str:
-    selected = [root / p for p in ("config.toml", "AGENTS.md", "manifest.toml", "skills.lock.json")]
-    for folder in ("agents", "policy", "skills", "config", "profiles"):
+    selected = [root / p for p in ("config.toml", "AGENTS.md", "manifest.toml", "skills.lock.json",
+                                    "scripts/agentctl.py")]
+    for folder in ("agents", "policy", "skills", "config"):
         selected += [p for p in (root / folder).rglob("*") if p.is_file()]
     h = hashlib.sha256()
     for p in sorted(selected):
@@ -687,7 +742,7 @@ def prepare(paths: Paths, state: dict[str, Any], stage: Path, manifest: dict[str
     drift = check_drift(paths, state, allow_runtime_local=True)
     require(not drift, "설치본이 직접 수정되어 덮어쓰지 않습니다: " + ", ".join(drift))
     local, migration_notes = rebase_legacy_skill_settings(effective_local(paths, state), paths, manifest["skills"])
-    base = toml(ROOT / "config.toml")
+    base = rendered_base()
     config = merge(merge(base, toml(ROOT / f"config/os/{paths.os}.toml")), local)
     payload = payload_hash()
     notes: list[str] = list(migration_notes)
@@ -700,10 +755,12 @@ def prepare(paths: Paths, state: dict[str, Any], stage: Path, manifest: dict[str
         source = stage / rel
         write(source, text, private)
         desired[target] = source
-    header = f"# Managed codex.conf snapshot: {payload}\n# Edit common source or .codex-conf/machine.toml, then agentctl sync.\n"
+    header = (f"# Managed codex.conf snapshot: {payload}\n"
+              "# Edit policy/models.toml, common source, or .codex-conf/machine.toml; then agentctl sync.\n")
     file(paths.code / "config.toml", "config.toml", header + dumps(config), True)
-    for p in sorted((ROOT / "profiles").glob("*.toml")):
-        file(paths.code / (p.stem + ".config.toml"), p.stem + ".config.toml", header + dumps(merge(config, toml(p))), True)
+    for name, override in sorted(model_policy()["profiles"].items()):
+        file(paths.code / (name + ".config.toml"), name + ".config.toml",
+             header + dumps(merge(config, override)), True)
     footer = ("\n## 설치 환경 (도구가 생성)\n\n"
               f"- 공통 패키지 SHA256: `{payload}`\n"
               f"- 실제 Codex 홈: `{paths.code.as_posix()}`\n"
@@ -731,7 +788,7 @@ def prepare(paths: Paths, state: dict[str, Any], stage: Path, manifest: dict[str
         notes.append("기존 관리 architect는 백업에 보존하고 현재 deep-reviewer로 통일")
     common = (ROOT / "policy/subagent-common.md").read_text(encoding="utf-8").strip()
     for p in sorted((ROOT / "agents").glob("*.toml")):
-        d = toml(p)
+        d = rendered_role(p)
         d["developer_instructions"] = d["developer_instructions"].strip() + "\n\n" + common + "\n\n" + route_instructions(p.stem, routes[p.stem], paths.skills, disabled)
         d["skills"] = role_skills(config, paths, manifest["skills"], routes[p.stem])
         out = agents / p.name
@@ -952,7 +1009,7 @@ def deployment(args: argparse.Namespace, paths: Paths, manifest: dict[str, Any])
             desired, local, notes, retire = prepare(paths, state, stage, manifest)
             print(f"OS={paths.os} | Codex={paths.code} | skills={paths.skills}")
             print(f"payload SHA256: {payload_hash()}")
-            wanted = toml(ROOT / "config.toml")
+            wanted = rendered_base()
             prior = toml(paths.code / "config.toml") if (paths.code / "config.toml").exists() else {}
             print(f"main: {prior.get('model', '(default)')} / {prior.get('model_reasoning_effort', '(default)')} -> {wanted['model']} / {wanted['model_reasoning_effort']}")
             print("로컬 보존 키(값은 출력 안 함): " + ", ".join(sorted(local)))
@@ -964,7 +1021,7 @@ def deployment(args: argparse.Namespace, paths: Paths, manifest: dict[str, Any])
                 print(f"[{status}] {target}")
             for note in notes:
                 print("[migration] " + note)
-            if toml(ROOT / "config.toml")["model_reasoning_effort"] == "max":
+            if model_policy()["main"]["model_reasoning_effort"] == "max":
                 print("[compat] max는 첨부 원본 보존값입니다. 공개 참조는 xhigh까지 열거하므로 설치된 CLI의 지원 확인이 필요합니다.")
             if args.cli or (apply and not args.skip_cli_check):
                 ok, message = cli_check(stage, manifest.get("expected_codex_version", ""))
@@ -1135,6 +1192,18 @@ def stats(manifest: dict[str, Any]) -> None:
     print("문자/바이트 수는 토큰 수·과금 절감률이 아닙니다. 실제 usage는 별도 세션 측정이 필요합니다.")
 
 
+def print_models() -> None:
+    policy = model_policy()
+    print("모델 원본: policy/models.toml")
+    print(f"main: {policy['main']['model']} / {policy['main']['model_reasoning_effort']}")
+    print(f"default subagent: {policy['defaults']['model']} / {policy['defaults']['model_reasoning_effort']}")
+    for name, values in sorted(policy["roles"].items()):
+        print(f"agent {name}: {values['model']} / {values['model_reasoning_effort']}")
+    for name, values in sorted(policy["profiles"].items()):
+        print(f"profile {name}: {values['model']} / {values['model_reasoning_effort']}")
+    print("변경 후: ./agentctl verify && ./agentctl plan --cli")
+
+
 def dispatch_wiki(argv: list[str]) -> int:
     """Use the INSTALLED helper, not newer source, including after rollback."""
     parser = argparse.ArgumentParser(add_help=False)
@@ -1163,7 +1232,7 @@ def main(argv: list[str] | None = None) -> int:
             print(f"agentctl: {e}", file=sys.stderr)
             return 2
     parser = argparse.ArgumentParser(description=__doc__, epilog="위키 연결·운영: agentctl wiki --help (설치 후 사용)")
-    parser.add_argument("command", choices=["verify", "plan", "install", "sync", "doctor", "status", "rollback", "uninstall", "recover", "import-state", "stats", "lock-skills", "skills"])
+    parser.add_argument("command", choices=["verify", "plan", "install", "sync", "doctor", "status", "rollback", "uninstall", "recover", "import-state", "stats", "lock-skills", "skills", "models"])
     parser.add_argument("--os", choices=["mac", "linux", "ubuntu", "windows"])
     parser.add_argument("--codex-home")
     parser.add_argument("--skills-home")
@@ -1189,8 +1258,11 @@ def main(argv: list[str] | None = None) -> int:
         manifest = None if args.command in {"rollback", "uninstall", "recover", "import-state"} else verify()
         if args.command == "verify":
             print("원본 검증 통과: TOML·역할 계약·스킬 메타데이터·스킬 lock")
-            if toml(ROOT / "config.toml")["model_reasoning_effort"] == "max":
+            if model_policy()["main"]["model_reasoning_effort"] == "max":
                 print("[compat] 원본의 max 보존. 공개 참조는 xhigh까지 열거: 실제 CLI 검사는 별도입니다")
+            return 0
+        if args.command == "models":
+            print_models()
             return 0
         if args.command == "stats":
             stats(manifest)
