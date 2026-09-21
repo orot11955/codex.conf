@@ -466,6 +466,8 @@ class AgentctlTests(unittest.TestCase):
             d = tomllib.loads(p.read_text())
             self.assertEqual(d["agents"], {"enabled": False})
             self.assertEqual(d["developer_instructions"].count("보통 10줄 이내"), 1)
+            self.assertEqual(d["developer_instructions"].count("Luna 역할이면 다음 중 하나라도"), 1)
+            self.assertIn("단일 반증 가능 근본 원인 가설", d["developer_instructions"])
 
     def test_42_toml_round_trip_nested_arrays_inline_tables_and_keys(self):
         mod = self.load_module()

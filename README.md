@@ -20,7 +20,7 @@
 
 ## 먼저 확인할 사항
 
-**메인은 `gpt-5.6-sol / high`, 기본 하위 에이전트는 `gpt-5.6-luna / max`입니다.** main이 일반 설계와 통합을 맡고, 어려운 국소 문제는 escalation 또는 deep-reviewer의 호출 조건에 따라 이관합니다. 역할별 모델과 추론은 `config.toml`, `agents/*.toml`이 기준이며 [역할표](docs/ROLE-MATRIX.md)를 함께 제공합니다.
+**메인은 `gpt-5.6-sol / high`, 기본 하위 에이전트는 `gpt-5.6-luna / max`입니다.** main이 일반 설계와 통합을 맡고, 진행 정체·범위 확대·경계 결정·고위험 변경 트리거가 발생하면 Luna는 편집을 멈추고 Sol main에 이관합니다. 국소 난제만 escalation이 인수하며 security와 deep-reviewer는 각 호출 조건을 유지합니다. 역할별 모델과 추론은 `config.toml`, `agents/*.toml`이 기준이며 [역할표](docs/ROLE-MATRIX.md)를 함께 제공합니다.
 
 **모델·추론의 실행 호환성은 별도 확인이 필요합니다.** 모델별 지원과 설치된 CLI의 설정 파서, 계정 접근 권한은 서로 다릅니다. 설치된 CLI로 `plan --cli`를 실행하세요. CLI가 설정을 거부하면 적용하지 않으며 모델·추론을 자동으로 낮추지 않습니다. 실제 계정의 모델 접근·추론 지원은 새 세션에서 별도로 확인해야 합니다. 상세 내용은 [호환성](docs/COMPATIBILITY.md)에 있습니다.
 
