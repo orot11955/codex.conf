@@ -1,0 +1,25 @@
+name: Configuration tests
+on:
+  push:
+    branches: [main, 'refactor/lightweight-config-20260922']
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Archive exact reviewed source
+        run: git archive --format=zip HEAD -o "$RUNNER_TEMP/codex-conf-source.zip"
+      - name: Offline regression tests
+        run: python3 -B -m unittest discover -s tests -v
+      - name: Review source artifact
+        if: always() && github.ref == 'refs/heads/refactor/lightweight-config-20260922'
+        uses: actions/upload-artifact@v4
+        with:
+          name: codex-conf-reviewed-source
+          path: ${{ runner.temp }}/codex-conf-source.zip
+          retention-days: 3
